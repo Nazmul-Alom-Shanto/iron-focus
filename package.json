@@ -1,12 +1,12 @@
 {
-  "name": "floatingwindow2",
+  "name": "floatingwindow",
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
   "build": {
-    "appId": "com.yourapp.id",
+    "appId": "com.shanto.floatingwindow",
     "win": {
       "target": "nsis"
     }

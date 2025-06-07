@@ -23,12 +23,7 @@ app.whenReady().then(() => {
     width: 320,
     height: 180,
   });
-  mainWindow.webContents.on('before-input-event', (event, input) => {
-    // Prevent all shortcuts, except basic typing keys
-    if (input.control || input.meta || input.alt || input.key === 'F5') {
-      event.preventDefault();
-    }
-  });
+
   // Load your HTML file
   mainWindow.loadFile('index.html');
 
