@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+   
+    <div class="renew" id="renew">
+        <h3>Time is Up</h3>
+        <button id="reset" class="submit-btn">Reset</button>
+    </div>
+    <button class="settings-btn" id="settings-btn">⚙️</button>
+    <div class="settings-menu" id="settings-menu">
+      
+            <button id="reload">Reload</button>
+            <button id="terget-list">Goals</button>
+            <button id="countUp-btn">CountUp</button>
+            
+        </ul>
+    </div>
+    <!--div class="main"-->
+    <h3 class="task" id="task-name">Task</h3>
+    <h4 class="qoute" id="qoute">Time and tide wait for none</h4>
+    <div class="timer" id="count-down-box">
+        <span id="h">05</span>h :
+        <span id="m">15</span>m :
+        <span id="s">30</span>s
+    </div>
+    <div class="countUpSection">
+        <h3 class="task" id="task-name">Task</h3>
+        <h4 class="qoute" id="qoute">Time and tide wait for none</h4>
+        <div class="timer" id="count-up-box">
+            <span id="h">00</span>h :
+            <span id="m">00</span>m :
+            <span id="s">00</span>s
+        </div>
+        <button id="countup-stop-btn"></button>
+        <button id="countup-reset-btn">🔄</button>
+        <button id="countup-playPouse-btn">▶️</button>
+    </div>
+
+
+    <div class="input" id="input">
+        <h3 class="task-lable">Task Input</h3>
+        <form id="inputForm">
+            <input type="text" class="taskInput" id="taskInput" placeholder="Enter Task Name">
+            <div class="timeInput">    
+                <input type="number" id="h-i" max="1" min="0">
+                    <span>H <span>:&nbsp;</span></span>
+                <input type="number" id="m-i" min="0" max="59">
+                    <span>M <span>:&nbsp; </span></span>
+                <input type="number" id="s-i" min="0" max="59">
+                    <span>S</span>
+            </div>
+            <button type="submit" class="submit-btn">Start</button>
+
+        </form>
+    </div>
+    <div class="goalsListInput">
+        <input type="text" id="goal-entry">
+        <button id="goat-entry-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#75FB4C"><path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/></svg>
+        </button>
+        <div class="view-goals-instant">
+            <ul>
+                <li></li>
+                <li></li>
+                <!--Will automatically created by js -->
+            </ul>
+        </div>
+    </div>
+      
+ 
+    <script src="./script.js"></script>
+ </body>
+</html>

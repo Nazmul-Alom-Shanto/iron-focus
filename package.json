@@ -1,0 +1,24 @@
+{
+  "name": "floatingwindow2",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "build": {
+    "appId": "com.yourapp.id",
+    "win": {
+      "target": "nsis"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "electron": "^10.8.2"
+  },
+  "devDependencies": {
+    "electron-packager": "^33.2.1"
+  }
+}
