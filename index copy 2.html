@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+   <style>
+    .settings-container {
+  position: relative; /* To position the menu relative to the button */
+  display: inline-block; /* So it behaves like an inline element */
+}
+
+.settings-btn {
+  background-color: #007bff; /* Blue background for the button */
+  color: white; /* White text color */
+  padding: 10px 12px; /* Padding around the button */
+  border: none;
+  border-radius: 50%; /* Circular button */
+  cursor: pointer;
+  font-size: 20px; /* Icon size */
+  transition: background-color 0.3s ease;
+}
+
+.settings-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.settings-menu {
+  display: none; /* Hidden by default */
+  position: absolute;
+  top: 100%; /* Position the menu below the button */
+  right: 0; /* Align the menu to the right of the button */
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow around the menu */
+  border-radius: 5px;
+  width: 150px; /* Set a fixed width for the menu */
+  z-index: 10;
+}
+
+.settings-menu ul {
+  list-style: none; /* Remove default list styling */
+  margin: 0;
+  padding: 0;
+}
+
+.settings-menu li {
+  padding: 10px 15px; /* Padding around the menu items */
+  cursor: pointer;
+}
+
+.settings-menu li:hover {
+  background-color: #f0f0f0; /* Light grey background on hover */
+}
+
+.settings-menu button {
+  width: 100%; /* Make the button fill the menu item */
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.settings-menu button:hover {
+  background-color: #f0f0f0; /* Light grey on hover for the button */
+}
+
+   </style>
+</head>
+<body>
+  <div class="settings-container">
+    <button id="settings-btn" class="settings-btn">⚙️</button>
+    <div id="settings-menu" class="settings-menu">
+      <ul>
+   
+         <li><button id="reload">Reload</button></li>
+      </ul>
+    </div>
+  </div>
+  
+      
+    <div class="main">
+    <h3 class="task" id="task-name">Task</h3>
+    <h4 class="qoute" id="qoute">Time and tide wait for none</h4>
+    <div class="timer">
+        <span id="h">05</span>h :
+        <span id="m">15</span>m :
+        <span id="s">30</span>s
+
+    </div>
+    </div>
+    <div class="input">
+        <h3 class="task-lable">Task Input</h3>
+        <form id="inputForm">
+            <input type="text" class="taskInput" id="taskInput" placeholder="Enter Task Name">
+            <div class="timeInput">    
+                <input type="number" id="h-i" max="1" min="0">
+                    <span>H <span>:&nbsp;</span></span>
+                <input type="number" id="m-i" min="0" max="59">
+                    <span>M <span>:&nbsp; </span></span>
+                <input type="number" id="s-i" min="0" max="59">
+                    <span>S</span>
+            </div>
+            <button type="submit" class="submit-btn">Start</button>
+
+        </form>
+    </div>
+ 
+    <script src="./script.js"></script>
+    <script>
+        const settingsBtn = document.getElementById("settings-btn");
+const settingsMenu = document.getElementById("settings-menu");
+
+// Toggle the menu when the button is clicked
+settingsBtn.addEventListener("click", () => {
+  settingsMenu.style.display = settingsMenu.style.display === "none" ? "block" : "none";
+});
+
+// Close the menu if you click outside it
+document.addEventListener("click", (event) => {
+  if (!settingsMenu.contains(event.target) && !settingsBtn.contains(event.target)) {
+    settingsMenu.style.display = "none";
+  }
+});
+
+    </script>
+</body>
+</html>
