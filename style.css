@@ -1,0 +1,271 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+ 
+body {
+    justify-content: center;
+    display: flex;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.body {
+    position: relative;
+    border-radius: 20px;
+    width: 100vw;
+    height: 100vh;
+    -webkit-app-region: drag;
+}
+/* .cursor-mask {
+  -webkit-app-region : no-drag;
+  cursor: move;
+  position: absolute;
+  inset: 0;
+  z-index: 1200;  above content */
+  /* pointer-events: none; /* let clicks pass through 
+}
+   */
+.task-setup {
+    /* display: none; */
+    -webkit-app-region: no-drag;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100% ;
+    background: #23dda5;
+}
+.task-setup * {
+  -webkit-app-region: no-drag;
+}
+.task-setup input {
+    padding: 8px 8px;
+    border-radius: 8px;
+    margin: 3px;
+    border: none;
+    height: 30px;
+}
+/* input[type="number"]::-webkit-inner-spin-button , */
+ input[type="number"]::-webkit-inner-spin-button,
+ textarea::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+} 
+.task-setup input:focus {
+    outline: 1px solid #2326dd99;
+}
+
+.task-setup > input {
+    width: 200px;
+    height: 30px;
+}
+.task-setup-inner > input {
+    width: 170px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-right: 0;
+
+}
+.task-setup-inner > input:focus + button {
+    outline: 1px solid #2326dd99;
+}
+.task-setup-inner button {
+    width: 32px;
+    height: 30px;
+    margin: 0;
+    outline: none;
+    border: none;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    position: relative;
+    left: -5px;
+    background: #f0f0f0;
+    cursor: pointer;
+}
+
+
+/* task show */
+.task-show {
+    position: relative;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: #eee;
+
+}
+.task-show .title {
+    color: #fa0606ce;
+    font-size: 22px;
+}
+/* .task-show .qoute {
+    text-align: start;
+    border-left: 2px solid #fff;
+    margin: 3px 10px;
+    padding: 0px 10px;
+} */
+.task-show .qoute {
+    font-family: 'Dancing Script', cursive;
+    font-family: 'Playfair Display', serif;
+    color: goldenrod;
+    font-style: italic;
+    font-size: 16px;
+    font-weight: 100;
+    text-align: center;
+    width: fit-content;
+    height: 30px;
+    border-left: 5px solid #780;
+    padding: 0px 10px;
+    margin: 4px 0px;
+    margin-bottom: 8px;
+}
+.task-show .qoute::after , .task-show .qoute::before {
+    content: '"';
+    color: red;
+}
+.task-show .count-down {
+        width: 220px;
+        text-align: center;
+        background: #fff;
+        padding: 4px 10px;
+        border: 2px solid green;
+        border-radius: 12px;
+        color: rgb(15, 93, 161);
+        font-size: 25px;
+        font-weight:700;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        
+}
+/* .task-show .count-down span {
+    font-size: 20px;
+    font-weight: 600;
+    color: red;
+} */
+.time-up {
+    position: relative;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+    color: red;
+    background: #eee;
+
+}
+.time-up h1 {
+    text-transform: uppercase;
+}
+.time-up button {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    margin: 4px;
+    border-radius: 10px;
+    color: #fff;
+    width: 40vw;
+}
+.time-up #alocate-time {
+    background: red;
+}
+.time-up #finish {
+    background: green;
+}
+.save-task {
+    -webkit-app-region: no-drag;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background: #23dda5;
+}
+.save-task * {
+  -webkit-app-region: no-drag;
+}
+.save-task input {
+    padding: 8px 8px;
+    border-radius: 12px;
+    margin: 3px;
+    border: none;
+    height: 40px;
+    width: 70vw;
+}
+.save-task input:focus, .save-task textarea:focus {
+    outline: 1px solid #2326dd99;
+}
+.save-task textarea {
+    width: 70vw;
+    resize: none;
+    height: 40vh;
+    margin: 10px;
+    padding: 10px;
+    font-size: 25px;
+    color: #780;
+    border-radius: 15px;
+}
+.save-task button {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    margin: 4px;
+    border-radius: 10px;
+    color: #fff;
+    width: 70vw;
+    font-size: 25px;
+
+    background-color: green;
+}
+
+/*settings */
+  
+     
+ #settings-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+  z-index: 1000;
+}
+#settings-icon * {
+  -webkit-app-region: no-drag;
+}
+.settings-container {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  border-radius: 10px;
+  background: #eee;
+  color: #000;
+  display: none;
+  z-index: 1000;
+}
+.settings-container * {
+  -webkit-app-region: no-drag;
+}
+.settings-container ul {
+  padding: 5px;
+}
+.settings-container li {
+  padding: 2px 5px;
+  border-radius: 8px;
+}
+.settings-container li:hover {
+  background-color: #23dda5;
+  cursor: pointer;
+}
+#settings-icon:hover + .settings-container {
+  display: block;
+}
+.settings-container:hover {
+  display: block;
+}
+button, input , i, ul, li, #settings-icon, .settings-container,
+button:hover, input:focus , i:hover, ul:hover, li:hover,  #settings-icon:hover, .settings-container:hover {
+  -webkit-app-region: no-drag;
+}

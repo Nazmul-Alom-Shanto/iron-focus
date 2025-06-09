@@ -1,11 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">    
+        <script src="./renderer.js" defer></script>
+        <title>Floating Window</title>
+    </head>
+    <body>
+        
+      <div class="body">
+        <!-- <div class="settings"> -->
+            <i id="settings-icon" class="fa fa-cog"></i>
+            <div class="settings-container">
+                <ul>
+                    <li id="logs">Logs</li>
+                    <li>About Dev</li> 
+                </ul>
+            </div>
+        <!-- </div> -->
+        <div class="task-setup">
+            <input type="text" name="" id="task-name-input" placeholder="Task Title">
+            <!-- <input type="number" name="" id="task-hours-input"> -->
+            <div class="task-setup-inner">
+                <input type="number" name="" min="15" id="task-minutes-input" placeholder="Time in Minutes">
+                <button id="start-task"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+
+        </div>
+        <div class="task-show">
+            <h3 class="title">Chemistry CH-5</h3>
+            <span class="qoute">Time & Tided wait for noneTime & Tided wait for none</span>
+            <div class="count-down">
+                <span class="hours">02</span>h : 
+                <span class="minutes">02</span>m : 
+                <span class="seconds">15</span>s 
+            </div>
+        </div>
+        <div class="time-up">
+            <h1>Time is Up</h1>
+            <button id="alocate-time">+10 minutes</button>
+            <button id="finish">Finish</button>
+        </div>
+        <div class="save-task">
+            <input class="save-task-title" type="text" placeholder="Title">
+            <input class="save-task-success" type="number" max="100" min="0" placeholder="Success in Percent">
+            <textarea name="info" id="save-info" placeholder="Description"></textarea>
+            <button id="save-btn">Save</button>
+        </div>
+      </div>
+    </body>
 </html>
