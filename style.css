@@ -36,9 +36,7 @@ body {
     height: 100% ;
     background: #23dda5;
 }
-.task-setup * {
-  /* -webkit-app-region: no-drag; */
-}
+
 .task-setup input {
     padding: 8px 8px;
     border-radius: 8px;
@@ -353,7 +351,6 @@ tbody tr:hover {
   position: absolute;
   left: 10px;
   color: #000;
-  font-size: 30px;
   top: 10px;
   cursor: pointer;
   z-index: 1000;
