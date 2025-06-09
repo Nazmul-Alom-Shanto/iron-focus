@@ -14,7 +14,7 @@ body {
     border-radius: 20px;
     width: 100vw;
     height: 100vh;
-    -webkit-app-region: drag;
+    -webkit-app-region: no-drag; 
 }
 /* .cursor-mask {
   -webkit-app-region : no-drag;
@@ -27,7 +27,7 @@ body {
    */
 .task-setup {
     /* display: none; */
-    -webkit-app-region: no-drag;
+    /* -webkit-app-region: no-drag; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,7 +37,7 @@ body {
     background: #23dda5;
 }
 .task-setup * {
-  -webkit-app-region: no-drag;
+  /* -webkit-app-region: no-drag; */
 }
 .task-setup input {
     padding: 8px 8px;
@@ -185,9 +185,9 @@ body {
     align-items: center;
     background: #23dda5;
 }
-.save-task * {
+/* .save-task * {
   -webkit-app-region: no-drag;
-}
+} */
 .save-task input {
     padding: 8px 8px;
     border-radius: 12px;
@@ -232,9 +232,9 @@ body {
   cursor: pointer;
   z-index: 1000;
 }
-#settings-icon * {
+/* #settings-icon * {
   -webkit-app-region: no-drag;
-}
+} */
 .settings-container {
   position: absolute;
   top: 20px;
@@ -245,15 +245,16 @@ body {
   display: none;
   z-index: 1000;
 }
-.settings-container * {
+/* .settings-container * {
   -webkit-app-region: no-drag;
-}
+} */
 .settings-container ul {
   padding: 5px;
 }
 .settings-container li {
   padding: 2px 5px;
   border-radius: 8px;
+  list-style: none;
 }
 .settings-container li:hover {
   background-color: #23dda5;
@@ -265,7 +266,94 @@ body {
 .settings-container:hover {
   display: block;
 }
-button, input , i, ul, li, #settings-icon, .settings-container,
+/* button, input , i, ul, li, #settings-icon, .settings-container,
 button:hover, input:focus , i:hover, ul:hover, li:hover,  #settings-icon:hover, .settings-container:hover {
   -webkit-app-region: no-drag;
+} */
+
+/* view-logs-overlay*/
+.view-logs-overlay {
+  position: fixed;
+  inset: 0;
+  padding: 100px 20px 30px;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1500;
+  overflow-y: auto;
+}
+.close-btn {
+  position: fixed;
+  top: 15px;
+  right: 25px;
+  background: #e74c3c;
+  color: white;
+  font-size: 24px;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+.close-btn:hover {
+  background: #c0392b;
+}
+.filter-container {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 10000;
+}
+.filter-container input {
+  padding: 5px 8px;
+  width: 100px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.filter-container input[type="number"] {
+    width: 100px;
+}
+
+table {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+thead {
+  background: #2c3e50;
+  color: white;
+}
+th, td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+tbody tr:hover {
+  background: #f9f9f9;
+}
+.timestamp {
+  color: #666;
+  font-size: 0.95em;
+}
+.drag {
+  position: absolute;
+  left: 10px;
+  color: #000;
+  font-size: 30px;
+  top: 10px;
+  cursor: pointer;
+  z-index: 1000;
+  -webkit-app-region: drag;
 }

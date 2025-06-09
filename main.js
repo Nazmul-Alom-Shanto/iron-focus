@@ -8,13 +8,13 @@ app.whenReady().then(() => {
     height: 133,
     frame: false,
     opacity: 1,
-    skipTaskbar: true,
+    skipTaskbar: false,
     alwaysOnTop: true,
     resizable: false,
     closable: false,
     focusable: true,
     transparent: true,
-    maximizable: false,
+     maximizable: true,
     minimizable : false,
     webPreferences: {
       nodeIntegration: true,
@@ -34,17 +34,27 @@ app.whenReady().then(() => {
   mainWindow.on('minimize', (e) => {
     e.preventDefault();
     mainWindow.show();
+    mainWindow.setAlwaysOnTop(true);
   });
-  mainWindow.on('blur', () => {
-    if (mainWindow.isVisible()) {
-      setTimeout(() => {
-        mainWindow.focus();
-        mainWindow.setAlwaysOnTop(true); // Re-assert always-on-top
-      }, 100);
-    }
-  });
+  // mainWindow.on('blur', () => {
+  //   mainWindow.focus();
+  //   mainWindow.setAlwaysOnTop(true, 'screen-saver');
+  // });
   mainWindow.setAlwaysOnTop(true, 'screen-saver'); // or 'modal-panel'
-    
+  // mainWindow.on('blur', () => {
+  //   setTimeout(() => {
+  //     if (!mainWindow.isFocused()) {
+  //       mainWindow.focus();
+  //     }
+  //   }, 200);
+  // });
+  // ipcMain.on('move-window', (event, x,y) => {
+  //   mainWindow.setBounds({...mainWindow.getBounds(), x,y});
+  // });
+  // ipcMain.handle('get-bounds', () => {
+  //   return mainWindow.getBounds;
+  // })
+  
 });
 
 // Fullscreen toggle
