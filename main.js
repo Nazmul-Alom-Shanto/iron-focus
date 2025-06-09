@@ -1,44 +1,73 @@
-const { app, BrowserWindow, screen } = require('electron');
+const { ipcMain, app, BrowserWindow, screen } = require('electron');
 
 let mainWindow;
 
 app.whenReady().then(() => {
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize; // Get the screen dimensions
-
   mainWindow = new BrowserWindow({
-   
+    width: 250,
+    height: 133,
     frame: false,
-    skipTaskbar: true, // Hide from taskbar
+    opacity: 1,
+    skipTaskbar: true,
     alwaysOnTop: true,
-    resizable: true,
+    resizable: false,
+    closable: false,
+    focusable: true,
+    transparent: true,
+    maximizable: false,
+    minimizable : false,
     webPreferences: {
-      nodeIntegration: true, // Optional, depending on your HTML/JS requirements
+      nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
-  // Set the window position and size
-  mainWindow.setBounds({
-    x: width - 320, // Screen width - window width
-    y: height - 380, // Top of the screen
-    width: 320,
-    height: 180,
-  });
-
-  // Load your HTML file
   mainWindow.loadFile('index.html');
 
-  // Open dev tools (optional for debugging)
-  // mainWindow.webContents.openDevTools();
-
-  // Re-create the window on macOS when the app is re-activated
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
+  // ✅ Trigger fullscreen once content is loaded and focused
+  mainWindow.webContents.once('did-finish-load', () => {
+    mainWindow.focus(); // Needed on some systems
+    mainWindow.setResizable(true);
+    mainWindow.setFullScreen(true);
+    mainWindow.setResizable(false);
+  });
+  mainWindow.on('minimize', (e) => {
+    e.preventDefault();
+    mainWindow.show();
+  });
+  mainWindow.on('blur', () => {
+    if (mainWindow.isVisible()) {
+      setTimeout(() => {
+        mainWindow.focus();
+        mainWindow.setAlwaysOnTop(true); // Re-assert always-on-top
+      }, 100);
     }
   });
+  mainWindow.setAlwaysOnTop(true, 'screen-saver'); // or 'modal-panel'
+    
 });
 
-// Quit the app when all windows are closed, except on macOS
+// Fullscreen toggle
+ipcMain.on('fullScreen', () => {
+  mainWindow.setResizable(true);
+  mainWindow.setFullScreen(true);
+  mainWindow.setResizable(false);
+});
+
+ipcMain.on('exitFullScreen', () => {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+  mainWindow.setResizable(true);
+  mainWindow.setFullScreen(false);
+  mainWindow.setBounds({
+    x: width - 250,
+    y: height - 380,
+    width: 250,
+    height: 140,
+  });
+  mainWindow.setResizable(false);
+});
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
