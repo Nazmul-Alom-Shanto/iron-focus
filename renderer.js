@@ -33,7 +33,7 @@ startTaskBtn.addEventListener('click', ()=> {
 
 // taskShow
 const titleShow = taskShow.querySelector('.title');
-const qoute = taskShow.querySelector('.qoute');
+const qouteShow = taskShow.querySelector('.qoute');
 const audio = new Audio('./assets/voice/timeUp.wav');
 (async () => {
     console.log(JSON.stringify(await readLogs()));
@@ -158,7 +158,6 @@ function displayBlock(block, drag = false){
 
 }
 
-
 //click handleing
 document.addEventListener('contextmenu', (e) => {
     e.preventDefault();
@@ -238,7 +237,7 @@ showLogsBtn.addEventListener('click', async()=> {
         <td>${log.extraAlocatedTime}</td>
         <td>${log.success}</td>
         <td>${log.description}</td>
-        <td class='timestamp'>${formateTimeStamp(log.timestamp)}</td>
+        <td  class="timestamp">${formateTimeStamp(log.timestamp)}</td>
       `;
       tbody.appendChild(row);
       l('I am here');
@@ -279,3 +278,45 @@ resetBtn.addEventListener('click', resetFilter);
 closeBtn.addEventListener('click',  vanishViewLogs);
 
 })
+
+// dynamic qoute functionality 
+
+//const qoute = document.querySelector('.qoute');
+
+const readQoutes = async () => {
+  try{
+    const qoutes = await fsp.readFile('qoute.json');
+    return JSON.parse(qoutes);
+  } catch(err) {
+    console.error('something went wrong when reading file from qoute.json', err.message);
+    return null;
+  }
+}
+const popFromQoutes = (qoutes) => {
+  const index = Math.floor(Math.random() * qoutes.length);
+  const qoute = qoutes[index];
+  qoutes.splice(index, 1);
+  return qoute;
+} 
+(async ()=> {
+  let qoutes = await readQoutes() || [];  
+
+  const intervalForQoutes = setInterval(async()=> {
+    if(qoutes.length == 0){
+      qoutes = await readQoutes() || [];
+      
+    } 
+    if(qoutes.length > 0){
+      // qouteShow.style.opacity = 0;
+      // setTimeout(()=> {
+      //   const qoute = popFromQoutes(qoutes);
+      //   qouteShow.innerHTML = qoute;
+      //   qouteShow.style.opacity = 1;
+      // }, 300);
+        const qoute = popFromQoutes(qoutes);
+        qouteShow.innerHTML = qoute;
+    } else {
+      qouteShow.innerHTML = 'Time & Tide wait for none, not even for Error 😎';
+    }
+  }, 10000);
+})();
