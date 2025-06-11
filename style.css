@@ -356,3 +356,11 @@ tbody tr:hover {
   z-index: 1000;
   -webkit-app-region: drag;
 }
+
+
+html, body {
+  background: transparent;
+  border-radius: 16px;
+  margin: 0;
+  overflow: hidden;
+}
