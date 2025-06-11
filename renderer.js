@@ -1,12 +1,225 @@
-const fs = require('fs');
-const fsp = require('fs').promises;
+
+// const {app} = require('electron');
+// const { ipcRenderer, app } = require('electron');
+
+  // const fs = require('fs');
+  // const path = require('path');
+  // const pathLog = 
+const qoutesStorage =  [
+  "Time & Tide wait for none",
+  "Dream big. Start small. Act now.",
+  "Discipline is the key to success",
+  "The best time to start is now",
+  "Consistency builds momentum",
+  "Don't wish for it. Work for it.",
+  "Push yourself, no one else will",
+  "You are stronger than you think",
+  "Great things take hard work",
+  "Make progress, not excuses",
+  "Success is earned, not given",
+  "Winners focus on the goal",
+  "Create a life you love",
+  "Keep grinding, keep rising",
+  "Be stronger than your excuses",
+  "Every day is a fresh start",
+  "Stay focused, stay hungry",
+  "Start where you are",
+  "Let your actions speak loud",
+  "Stay humble, hustle hard",
+  "The grind never stops",
+  "Small steps every day",
+  "Work hard in silence",
+  "Hustle in silence. Let it show.",
+  "Stay positive, work hard",
+  "Progress is better than perfect",
+  "Commitment changes everything",
+  "Focus on what you can control",
+  "Success is built, not found",
+  "Grind now, shine later",
+  "Work until it pays off",
+  "Excuses don’t build empires",
+  "Discipline outlasts motivation",
+  "Sacrifice for your future self",
+  "Think big, move fast",
+  "Never forget why you started",
+  "Growth starts outside comfort",
+  "Show up for yourself",
+  "You become what you repeat",
+  "Prove yourself to yourself",
+  "Be obsessed with improvement",
+  "The journey is the reward",
+  "Don’t fear failure, learn from it",
+  "Your habits shape your destiny",
+  "Consistency makes legends",
+  "Stay focused. Stay fearless.",
+  "Own your morning, own your day",
+  "The pain you feel builds strength",
+  "Don't stop when you're tired",
+  "Success comes to the prepared",
+  "Discipline is self-respect",
+  "Hard choices, easy life",
+  "Turn struggle into strength",
+  "Create your own motivation",
+  "Respect the process always",
+  "Keep showing up daily",
+  "Make discipline your habit",
+  "Never negotiate your goals",
+  "Win the day, every day",
+  "Refuse to be average",
+  "Work in silence, rise in power",
+  "Your future is created today",
+  "Let progress be your proof",
+  "Master your mind daily",
+  "The only limit is your mind",
+  "One step at a time wins",
+  "It’s hard, but worth it",
+  "Sacrifice is temporary",
+  "Choose growth every time",
+  "Don’t wait for motivation",
+  "Keep moving, stay focused",
+  "Wake up with purpose",
+  "Build your future in silence",
+  "Outwork your old self",
+  "Hustle until it happens",
+  "Comfort kills progress",
+  "Hard work never lies",
+  "Your energy creates results",
+  "Be fearless in pursuit",
+  "Act more. Doubt less.",
+  "It’s never too late to start",
+  "Don’t break, breakthrough",
+  "You are your best asset",
+  "Fear fades with action",
+  "Train your focus daily",
+  "Earn your peace every day",
+  "Be driven by discipline",
+  "Kill doubt with action",
+  "Your dreams need effort",
+  "Stay in the game always",
+  "Own every second of it",
+  "Fall down. Get back up.",
+  "Control your controllables",
+  "Your grind defines you",
+  "Patience + action = growth",
+  "Keep building in silence",
+  "Let your habits lead",
+  "Bet on yourself daily",
+  "Do it tired. Do it anyway.",
+  "Every second is a choice",
+  "Focus. Build. Repeat."
+,
+  "Time & Tide wait for none",
+  "Dream big, work smart",
+  "Never give up",
+  "Do it now",
+  "Stay strong",
+  "Make it happen",
+  "Push your limits",
+  "Start with why",
+  "Believe in you",
+  "You are enough",
+  "Create your chance",
+  "Live with purpose",
+  "Trust the process",
+  "Just begin",
+  "Own your story",
+  "Hustle with heart",
+  "Keep showing up",
+  "Grow through it",
+  "Make today count",
+  "Think. Plan. Do.",
+  "Work beats talent",
+  "Strive for more",
+  "Action over words",
+  "Hard work wins",
+  "Focus is power",
+  "Fail forward",
+  "Small steps matter",
+  "Discipline wins",
+  "Work in silence",
+  "Effort is everything",
+  "Limitless mindset",
+  "Silence is strength",
+  "Rise and grind",
+  "One day or day one",
+  "Stay the course",
+  "Let it fuel you",
+  "Level up daily",
+  "Start small",
+  "Nothing is easy",
+  "Chase your dream",
+  "Never settle",
+  "Eyes on the prize",
+  "Value your time",
+  "Earn your spot",
+  "You got this",
+  "Never stop learning",
+  "Adapt and win",
+  "Stay consistent",
+  "Be unstoppable",
+  "Go all in",
+  "Work. Learn. Grow.",
+  "Build, don't beg",
+  "Consistency wins",
+  "Self-control is power",
+  "Prove them wrong",
+  "Keep your word",
+  "Win with values",
+  "Lead by effort",
+  "Choose growth",
+  "Decide. Commit. Act.",
+  "Slow is smooth",
+  "Be your reason",
+  "Quit the excuses",
+  "Stay humble",
+  "Work your plan",
+  "Mindset is key",
+  "Be obsessed",
+  "Grind in peace",
+  "Never back down",
+  "Progress over speed",
+  "Focus over flash",
+  "Patience pays off",
+  "Respect the grind",
+  "Discipline = freedom",
+  "Act, don't react",
+  "Vision fuels action",
+  "You vs. you",
+  "Plan. Prepare. Perform.",
+  "Every day counts",
+  "Stay in motion",
+  "Outwork your doubt",
+  "Let habits lead",
+  "Your pace matters",
+  "Energy is currency",
+  "Build your legacy",
+  "Change takes time",
+  "Be resilient",
+  "Craft your future",
+  "Earned, not given",
+  "Grow or stay stuck",
+  "Fear is a liar",
+  "Train your mind",
+  "Purpose over pleasure",
+  "Be better daily",
+  "Own your journey",
+  "Stay in control",
+  "No shortcut exists",
+  "Clarity creates power",
+  "Winners don’t whine",
+  "Keep it moving",
+  "Start before ready"
+] 
+
+// const pathLog = path.join(app.getPath('userData'), 'log.json');
+// if(!fs.existsSync(pathLog)){
+//   fs.writeFileSync(pathLog, JSON.stringify({"logs":[]}));
+// }
 // if (typeof window === 'undefined') {
 //     const fs = require('fs');
 //     // Node-specific logic here
 // }
-const { ipcRenderer } = require('electron');
-const { verify } = require('crypto');
-const { log } = require('console');
+
 
 // main blocks
 const taskSetup = document.querySelector('.task-setup');
@@ -103,8 +316,12 @@ function l(m){
 }
 async function readLogs(){
     try {
-        const logs  = JSON.parse(fs.readFileSync('log.json').toString());
-        return logs.logs;
+        const data = await ipcRenderer.invoke('load-logs');
+        if(data.success) {
+          return data.logs;
+        } else {
+          throw Error(`'Failed to load logs from main.js' , Err message : ${data.message}`);
+        }
     } catch(err){
         console.error('hey, something went wrong, ',err.message);
         return null;
@@ -118,8 +335,12 @@ async function updateLogs(log){
     const temp = {
         logs : logs
     }
-    fsp.writeFile('log.json', JSON.stringify(temp), null, 2);
-    console.log('have written sucessfully');
+    const response = await ipcRenderer.invoke('update-log', temp);
+    if(response.success){
+      console.log('log has been updated sucessfully');
+    } else{
+      throw new Error(`Someting went wrong when trying to update logs. Err Message: ${response.message}`);
+    }
     l(JSON.stringify(log));
     location.reload();
     } catch (err){
@@ -283,14 +504,17 @@ closeBtn.addEventListener('click',  vanishViewLogs);
 
 //const qoute = document.querySelector('.qoute');
 
-const readQoutes = async () => {
-  try{
-    const qoutes = await fsp.readFile('qoute.json');
-    return JSON.parse(qoutes);
-  } catch(err) {
-    console.error('something went wrong when reading file from qoute.json', err.message);
-    return null;
-  }
+// const readQoutes = async () => {
+//   try{
+//     const qoutes = await fsp.readFile('qoute.json');
+//     return JSON.parse(qoutes);
+//   } catch(err) {
+//     console.error('something went wrong when reading file from qoute.json', err.message);
+//     return null;
+//   }
+// }
+const readQoutes = async() => {
+  return qoutesStorage;
 }
 const popFromQoutes = (qoutes) => {
   const index = Math.floor(Math.random() * qoutes.length);
