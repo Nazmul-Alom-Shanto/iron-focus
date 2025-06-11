@@ -97,7 +97,9 @@ body {
 }
 .task-show .title {
     color: #fa0606ce;
-    font-size: 22px;
+    font-size: 20px;
+    text-align: center;
+    width: 210;
 }
 /* .task-show .qoute {
     text-align: start;
