@@ -3,8 +3,6 @@ const path = require('path');
 const fs = require('fs');
 const fsp = require('fs/promises');
 const { spawn } = require('child_process');
-const { eventNames } = require('process');
-const { json } = require('stream/consumers');
 
 function startWatchdog() {
   const appExe = process.execPath; // Path to the running .exe
@@ -27,6 +25,22 @@ function startWatchdog() {
 
 startWatchdog();
 
+const gotTheLock = app.requestSingleInstanceLock();
+
+if(!gotTheLock){
+  // if another instance is running quit this one
+    app.quit();
+} else {
+  app.on('second-instance',()=> {
+    if(mainWindow){
+      if(mainWindow.isMinimized()) mainWindow.restore();
+      if(!mainWindow.isVisible()) mainWindow.show();
+      mainWindow.setAlwaysOnTop(true);
+    } else {
+      mainWindow = createWindow();
+    }
+  })
+}
 
 let mainWindow;
 let isSmall;
