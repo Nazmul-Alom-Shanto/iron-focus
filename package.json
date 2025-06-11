@@ -1,24 +1,48 @@
 {
-  "name": "floatingwindow",
+  "name": "iron-focus",
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
   },
   "build": {
-    "appId": "com.shanto.floatingwindow",
+    "appId": "com.shanto.IronFocus",
+    "productName": "Iron Focus",
     "win": {
-      "target": "nsis"
+      "target": [
+    {
+      "target": "nsis",
+      "arch": [
+        "x64"
+      ]
     }
+  ],
+      "icon": "assets/IronFocus.ico"
+     
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Iron Focus",
+      "license": "LICENSE",
+      "runAfterFinish": true
+    },
+    "files": [
+      "**/*"
+    ]
   },
+ 
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "electron": "^10.8.2"
-  },
+  "author": "Nazmul Alom Shanto",
+  "license": "MIT",
+  "description": "Iron Focus is a minimalist always-on-top productivity tool to help users stay committed to single tasks through a focused session workflow.",
   "devDependencies": {
-    "electron-packager": "^33.2.1"
+    "electron": "^36.2.1",
+    "electron-builder": "^24.13.3"
   }
 }
