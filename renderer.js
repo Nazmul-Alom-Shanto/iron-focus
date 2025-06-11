@@ -244,6 +244,12 @@ startTaskBtn.addEventListener('click', ()=> {
     displayBlock(taskShow);
 })
 
+document.getElementById('task-minutes-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    document.getElementById('start-task').click();
+  }
+});
+
 // taskShow
 const titleShow = taskShow.querySelector('.title');
 const qouteShow = taskShow.querySelector('.qoute');
