@@ -241,7 +241,7 @@ startTaskBtn.addEventListener('click', ()=> {
     givenTime = totalTimeInput.value;
     titleShow.innerText = title;
     countDown(givenTime);
-    displayBlock(taskShow, true);
+    displayBlock(taskShow);
 })
 
 // taskShow
@@ -269,7 +269,7 @@ function countDown(minutes){
         seconds--;
         if(seconds < 0){
             clearInterval(timer);
-            displayBlock(timeUp, true);   
+            displayBlock(timeUp);   
             audio.play();
         }
     }, 1000);
@@ -302,7 +302,7 @@ const finishBtn = document.getElementById('finish');
 alocateTimeBtn.addEventListener('click', ()=> {
     extraAlocatedTime += 10;
     countDown(10);
-    displayBlock(taskShow, true);
+    displayBlock(taskShow);
 })
 finishBtn.addEventListener('click', () => {
    displayBlock(saveTask);
@@ -363,19 +363,19 @@ function formateTimeStamp(iso){
   });
 }
 displayBlock(taskSetup)
-function displayBlock(block, drag = false){
+function displayBlock(block){
     [taskSetup, taskShow, timeUp, saveTask].forEach(b => {
         if(b != block){
             b.style.display = 'none';
-            
         }
     });
     block.style.display = 'flex';
-    // if(drag){
-    //   document.querySelector('.drag').style.display = 'fixed';
-    // }else {
-    //   document.querySelector('.drag').style.display = 'none';
-    // }
+    const dragEl = document.querySelector('.drag');
+    if(block == taskSetup || block == saveTask){
+      dragEl.style.display = 'none';
+    } else {
+      dragEl.style.display = 'unset'
+    }
 
 }
 
