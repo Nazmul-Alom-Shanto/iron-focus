@@ -1,6 +1,6 @@
 
 // const {app} = require('electron');
-// const { ipcRenderer, app } = require('electron');
+const { ipcRenderer} = require('electron');
 
   // const fs = require('fs');
   // const path = require('path');
@@ -209,7 +209,7 @@ const qoutesStorage =  [
   "Winners don’t whine",
   "Keep it moving",
   "Start before ready"
-] 
+]
 
 // const pathLog = path.join(app.getPath('userData'), 'log.json');
 // if(!fs.existsSync(pathLog)){
