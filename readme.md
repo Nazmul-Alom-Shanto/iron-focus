@@ -9,6 +9,7 @@
 ## 🚀 Features
 
 - 🔒 **Lock-in Mode:** Start a task and enter a no-escape workflow — tiny window, always on top, no distractions.
+If you try to minimize or close the window, the app detects it and *refuses* to shut down — instead, it hides briefly (1s) and then reappears. This forces you to stay focused and accountable.
 - ⏱️ **Accurate Timers:** Start with a defined estimate. Add extra 10-minute chunks as needed.
 - 🧠 **Post-Task Reflection:** Rate your success, write what happened, and save it to a log.
 - 📊 **Log Viewer:** Full-screen table of past tasks, complete with filters by time, success %, and more.
@@ -54,7 +55,7 @@
 ## 📦 Getting Started
 
 ```bash
-git clone https://github.com/your-username/ironfocus.git
+git clone https://github.com/your-username/iron-focus.git
 cd ironfocus
 npm install
 npm start
@@ -66,4 +67,5 @@ Built with passion and purpose by @Nazmul-Alom-Shanto.
 Just a student trying to stay focused, code better, and stay accountable. 😄
 
 ## 📜 License
-MIT License
+
+This project is licensed under the [MIT License](./LICENSE).
