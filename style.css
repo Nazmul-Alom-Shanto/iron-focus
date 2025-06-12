@@ -226,10 +226,11 @@ body {
   right: 8px;
   top: 8px;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 1500;
   color: #222;
-  font-size: 14px;
-  filter: drop-shadow(1px 1px 1px #fff);
+  width: 20px;
+  height:  20px;
+  /* filter: drop-shadow(1px 1px 1px #fff); */
 }
 
 
@@ -361,9 +362,11 @@ html, body {
   left: 8px;
   top: 8px;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 1500;
+  width: 20px;
+  height: 20px;
   color: #222;
-  font-size: 14px;
-  filter: drop-shadow(1px 1px 1px #fff);
+
+  /* filter: drop-shadow(1px 1px 1px #fff); */
   -webkit-app-region: drag;
 }
