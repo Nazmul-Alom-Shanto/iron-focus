@@ -232,6 +232,7 @@ let extraAlocatedTime = 0;
 let givenTime = 0;
 let timer = null;
 let timeremaining = null;
+let fallbackTimeout = null;
 // taskSetup 
 const taskNameInput = document.getElementById('task-name-input');
 const totalTimeInput = document.getElementById('task-minutes-input');
@@ -309,11 +310,13 @@ saveBtn.addEventListener('click', ()=> {
 const alocateTimeBtn = document.getElementById('alocate-time');
 const finishBtn = document.getElementById('finish');
 alocateTimeBtn.addEventListener('click', ()=> {
+    if(fallbackTimeout) clearTimeout(fallbackTimeout);
     extraAlocatedTime += 10;
     countDown(10);
     displayBlock(taskShow);
 })
 finishBtn.addEventListener('click', () => {
+  if(fallbackTimeout) clearTimeout(fallbackTimeout);
    displayBlock(saveTask);
    titleConfirm.value = title;
    successInput.focus(); 
@@ -386,6 +389,13 @@ function displayBlock(block){
       dragEl.style.display = 'unset'
     }
 
+    if(block == timeUp) {
+      fallbackTimeout = setTimeout(()=> {
+        extraAlocatedTime += 3;
+        finishBtn.click();
+      },180 * 1000);
+    }
+
 }
 
 //click handleing
@@ -402,10 +412,7 @@ document.addEventListener('keydown', (e) => {
 const finishNowBtn = document.getElementById('finish-now-btn');
 finishNowBtn.addEventListener('click', ()=> {
       extraAlocatedTime -= Math.floor(timeremaining / 60);
-      displayBlock(saveTask);
-      titleConfirm.value = title;
-      successInput.focus();
-      fullScreen(true);
+      finishBtn.click();
       if(timer) clearInterval(timer);
 })
 // log view
