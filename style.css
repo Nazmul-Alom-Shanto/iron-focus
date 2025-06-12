@@ -80,8 +80,11 @@ body {
     left: -5px;
     background: #f0f0f0;
     cursor: pointer;
+    top : 2px;
 }
-
+.task-setup-inner button svg {
+  width: 14px;
+}
 
 .task-show {
   position: relative;
@@ -220,26 +223,13 @@ body {
     background-color: green;
 }
 
-/* Top-right icon */
-#settings-icon {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  cursor: pointer;
-  z-index: 1500;
-  color: #222;
-  width: 20px;
-  height:  20px;
-  /* filter: drop-shadow(1px 1px 1px #fff); */
-}
-
 
 .settings-container {
   position: absolute;
   top: 20px;
   right: 15px;
   border-radius: 10px;
-  background: #eee;
+  background: #f4dddd;
   color: #000;
   display: none;
   z-index: 1000;
@@ -256,8 +246,9 @@ body {
   list-style: none;
 }
 .settings-container li:hover {
-  background-color: #23dda5;
   cursor: pointer;
+  background: #0c4d14;
+  color : #fff;
 }
 #settings-icon:hover + .settings-container {
   display: block;
@@ -356,17 +347,24 @@ html, body {
   overflow: hidden;
 }
 
+title {
+  background: transparent;
+}
 /* Top-left drag area/icon */
-.drag {
+.drag , #settings-icon {
   position: absolute;
-  left: 8px;
   top: 8px;
   cursor: pointer;
   z-index: 1500;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   color: #222;
-
-  /* filter: drop-shadow(1px 1px 1px #fff); */
-  -webkit-app-region: drag;
+}
+.drag  {
+    -webkit-app-region: drag;
+  left: 8px;
+}
+/* Top-right icon */
+#settings-icon {
+  right: 8px;
 }
