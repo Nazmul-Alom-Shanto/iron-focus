@@ -231,6 +231,7 @@ let title = '';
 let extraAlocatedTime = 0;
 let givenTime = 0;
 let timer = null;
+let timeremaining = null;
 // taskSetup 
 const taskNameInput = document.getElementById('task-name-input');
 const totalTimeInput = document.getElementById('task-minutes-input');
@@ -263,6 +264,7 @@ function countDown(minutes){
     const sInput = taskShow.querySelector('.seconds');
     
     let seconds = minutes * 60;
+    timeremaining = seconds;
     if(timer) clearInterval(timer);
     timer = setInterval(() => {
         const h = Math.floor(seconds / 3600);
@@ -273,6 +275,7 @@ function countDown(minutes){
         mInput.innerText = m;
         sInput.innerText = s;
         seconds--;
+        timeremaining = seconds;
         if(seconds < 0){
             clearInterval(timer);
             displayBlock(timeUp);   
@@ -394,7 +397,17 @@ document.addEventListener('keydown', (e) => {
         e.preventDefault();
     }
 })
+// finish now
 
+const finishNowBtn = document.getElementById('finish-now-btn');
+finishNowBtn.addEventListener('click', ()=> {
+      extraAlocatedTime -= Math.floor(timeremaining / 60);
+      displayBlock(saveTask);
+      titleConfirm.value = title;
+      successInput.focus();
+      fullScreen(true);
+      if(timer) clearInterval(timer);
+})
 // log view
 const showLogsBtn = document.getElementById('show-logs-btn');
 showLogsBtn.addEventListener('click', async()=> {
