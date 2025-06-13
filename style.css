@@ -301,54 +301,77 @@ button:hover, input:focus , i:hover, ul:hover, li:hover,  #settings-icon:hover, 
 }
 .filter-container {
   position: fixed;
+  justify-content: center;
   top: 20px;
   left: 20px;
   right: 80px;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   background: #fff;
-  padding: 12px;
+  padding: 8px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   z-index: 10000;
 }
 .filter-container input {
-  padding: 5px 8px;
+  padding: 3px 5px;
   width: 100px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 14px;
 }
-.filter-container input[type="number"] {
-    width: 100px;
+.filter-container input[type="button"]{
+  width: 80px;
 }
 
-table {
-  width: 100%;
-  max-width: 1200px;
-  margin: auto;
-  border-collapse: collapse;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(0,0,0,0.08);
-  border-radius: 8px;
-  overflow: hidden;
+.filter-container input[type="number"] {
+  width: 100px;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  color: #333;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-thead {
-  background: #2c3e50;
-  color: white;
+
+.filter-container input[type="number"]:hover {
+  border-color: #007B8A;
 }
-th, td {
-  padding: 12px 14px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
+
+.filter-container input[type="number"]:focus {
+  border-color: #007B8A;
+  box-shadow: 0 0 0 2px rgba(0, 123, 138, 0.25);
+  background-color: #fff;
 }
-tbody tr:hover {
-  background: #f9f9f9;
+
+.filter-container input[type="number"]::placeholder {
+  font-size: 12px;
+  color: #999;
 }
-.timestamp {
-  color: #666;
-  font-size: 0.95em;
+
+.filter-container input[type="date"] {
+  width: 110px;
+  padding: 4px 6px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  color: #333;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-container input[type="date"]:hover {
+  border-color: #007B8A;
+}
+
+.filter-container input[type="date"]:focus {
+  border-color: #007B8A;
+  box-shadow: 0 0 0 2px rgba(0, 123, 138, 0.25);
+  background-color: #fff;
 }
 
 
@@ -380,15 +403,27 @@ title {
 #settings-icon {
   right: 8px;
 }
-
 .import-log-file {
-  display: none; /* Hide native input */
+  display: none;
 }
 
+/* Primary buttons */
+.import-log-btn,
+.export-log-btn {
+  background-color: #007B8A;
+}
+.import-log-btn:hover,
+.export-log-btn:hover {
+  background-color: #006471;
+}
+
+/* Shared button styles */
+.reset,
+.filter,
+.export-log-btn,
 .import-log-btn {
   display: inline-block;
-  padding: 10px 20px;
-  background-color: #4CAF50; /* Green */
+  padding: 10px 15px;
   color: white;
   border: none;
   border-radius: 8px;
@@ -397,6 +432,62 @@ title {
   transition: background-color 0.3s ease;
 }
 
-.import-log-btn:hover {
-  background-color: #45a049;
+/* Reset button */
+.reset {
+  background-color: #C0392B;
+}
+.reset:hover {
+  background-color: #A93226;
+}
+
+/* Filter button */
+.filter {
+  background-color: #3F51B5;
+}
+.filter:hover {
+  background-color: #303F9F;
+}
+
+table {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Table Header */
+thead {
+  background-color: #2c3e50;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Header and Cell Padding */
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eaeaea;
+  font-size: 14px;
+}
+
+/* Row Hover */
+tbody tr:hover {
+  background-color: #f4f6f8;
+}
+
+/* Timestamp styling */
+.timestamp {
+  color: #7f8c8d;
+  font-size: 0.9em;
+  font-style: italic;
+}
+
+/* Optional: Zebra striping */
+tbody tr:nth-child(even) {
+  background-color: #fafafa;
 }
