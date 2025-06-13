@@ -105,6 +105,7 @@ function createWindow(){
 }
 
 const pathLog = path.join(app.getPath('userData'), 'logs.json');
+const pathQoute = path.join(app.getAppPath(), 'qoute.json');
 if (!fs.existsSync(pathLog)) {
   const initialLog = {
     logs: [
@@ -206,7 +207,15 @@ ipcMain.handle('load-logs', async()=> {
     return {success : false, message : err.message};
   }
 })
-
+ipcMain.handle('load-qoutes', async() => {
+  try{
+    const data = await fsp.readFile(pathQoute, 'utf-8');
+    const qoutes = JSON.parse(data);
+    return {success : true, qoutes : qoutes}
+  } catch(err){
+    return {success : false, message : err.message};
+  }
+});
 ipcMain.handle('update-log', async(event, logs)=> {
   try{
     await fsp.writeFile(pathLog,JSON.stringify(logs, null , 2));
