@@ -2,8 +2,6 @@
 
 **IronFocus** is a minimalist, distraction-resistant task manager built with **Electron**. It's designed to lock you into focus — literally — and help you track your time, performance, and habits in a clean log system.
 
-![IronFocus Screenshot](./assets/screenshot.png) <!-- optional image -->
-
 ---
 
 ## 🚀 Features
@@ -48,15 +46,27 @@ If you try to minimize or close the window, the app detects it and *refuses* to 
 
 ## 📸 Screenshots
 
-> *(Add screenshots or screen recording GIFs here)*
+> ![Task Setup](./assets/img/setup.png)
+> **Task Setup**
 
----
+> ![Task View](./assets/img/task-show.png)
+> **Task View**
+
+> ![Time Up](./assets/img/timeup.png)
+> **Time Up**
+
+> ![Save Task](./assets/img/save-task.png)
+> **Save Task**
+
+> ![View Log](./assets/img/view-log.png)
+> **View Log**
+
 
 ## 📦 Getting Started
 
 ```bash
-git clone https://github.com/your-username/iron-focus.git
-cd ironfocus
+git clone https://github.com/Nazmul-Alom-Shanto/iron-focus.git
+cd iron-focus
 npm install
 npm start
 
