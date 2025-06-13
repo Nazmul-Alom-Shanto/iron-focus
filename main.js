@@ -231,7 +231,7 @@ ipcMain.handle('load-qoutes', async() => {
   }
 });
 ipcMain.handle('update-log', async(_, logs)=> {
- writeLogsToFile(logs);
+  return await writeLogsToFile(logs);
 });
 ipcMain.handle('export-logs', async ()=> {
   try{
