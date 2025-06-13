@@ -183,12 +183,15 @@ function displayBlock(block){
     } else {
       dragEl.style.display = 'unset'
     }
-
+    if(block == taskShow){
+    finishNowBtn.classList.remove('disabled');
+    }
     if(block == timeUp) {
       fallbackTimeout = setTimeout(()=> {
         extraAlocatedTime += 3;
         finishBtn.click();
       },180 * 1000);
+    finishNowBtn.classList.add('disabled');
     }
 
 }
@@ -205,9 +208,11 @@ document.addEventListener('keydown', (e) => {
 // finish now
 
 const finishNowBtn = document.getElementById('finish-now-btn');
+finishNowBtn.classList.add('disabled');
 finishNowBtn.addEventListener('click', ()=> {
       extraAlocatedTime -= Math.floor(timeremaining / 60);
       finishBtn.click();
+      finishNowBtn.classList.add('disabled');
       if(timer) clearInterval(timer);
 })
 // log view
@@ -267,7 +272,7 @@ showLogsBtn.addEventListener('click', async()=> {
   const logs = await readLogs();
   l(JSON.stringify(logs));
   renderLogs(logs);
-  function renderLogs(filteredLogs){
+  function renderLogs(filteredLogs) {
     const tbody = viewLogsOverlay.querySelector('.logTableBody');
     tbody.innerHTML = '';
     filteredLogs.forEach((log, index) => {
