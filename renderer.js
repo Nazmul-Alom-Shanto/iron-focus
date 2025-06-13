@@ -200,6 +200,47 @@ function displayBlock(block){
     }
 
 }
+// showWarning Funtion
+showWarningMessage('hey, me a warning');
+function showWarningMessage(message, bg = '#f44336', ) {
+  let container = document.querySelector(".warning-message-container");
+  if (!container) {
+      container = document.createElement("div");
+      container.className = "warning-message-container";
+      container.style.position = "fixed";
+      container.style.top = "10px";
+      container.style.right = "15px";
+      container.style.paddingLeft = "15px";
+      container.style.zIndex = "9999";
+      container.style.display = "flex";
+      container.style.flexDirection = "column";
+      container.style.gap = "5px";
+      document.body.appendChild(container);
+  }
+
+  const warning = document.createElement("div");
+  warning.className = "warning-message";
+  warning.textContent = message;
+  warning.style.background = bg; // red
+  warning.style.color = "#fff";
+  warning.style.padding = "4px 8px";
+  warning.style.borderRadius = "8px";
+  warning.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+  warning.style.fontFamily = "sans-serif";
+  warning.style.transition = "opacity 0.3s";
+  warning.style.fontSize = '13px';
+  warning.style.opacity = "1";
+
+  console.warn("Warn:", message);
+  container.appendChild(warning);
+
+  setTimeout(() => {
+      warning.style.opacity = "0";
+      setTimeout(() => {
+          warning.remove();
+      }, 300);
+  }, 3000);
+}
 
 //click handleing
 document.addEventListener('contextmenu', (e) => {
