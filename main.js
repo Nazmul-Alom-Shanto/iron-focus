@@ -1,8 +1,11 @@
-const { ipcMain, app, BrowserWindow, screen } = require('electron');
+const { ipcMain, app, BrowserWindow, screen, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const fsp = require('fs/promises');
 const { spawn } = require('child_process');
+const { json } = require('stream/consumers');
+const { timeStamp } = require('console');
+const { subtle } = require('crypto');
 
 function startWatchdog() {
   const appExe = process.execPath; // Path to the running .exe
@@ -197,7 +200,7 @@ app.whenReady().then(() => {
 ipcMain.on('fullScreen', () => {
   bigSize();
 });
-ipcMain.handle('load-logs', async()=> {
+const loadLogsFromFile = async()=> {
   try {
     const data = await fsp.readFile(pathLog, 'utf-8');
     const parsed = JSON.parse(data);
@@ -206,7 +209,18 @@ ipcMain.handle('load-logs', async()=> {
   } catch(err){
     return {success : false, message : err.message};
   }
-})
+}
+const writeLogsToFile = async (logs)=> {
+  try{
+    await fsp.writeFile(pathLog,JSON.stringify(logs, null , 2));
+    return {success : true}
+  } catch(err){
+    return {success : false, message : err.message};
+  }
+}
+ipcMain.handle('load-logs', async()=> {
+  return await loadLogsFromFile();
+});
 ipcMain.handle('load-qoutes', async() => {
   try{
     const data = await fsp.readFile(pathQoute, 'utf-8');
@@ -216,14 +230,45 @@ ipcMain.handle('load-qoutes', async() => {
     return {success : false, message : err.message};
   }
 });
-ipcMain.handle('update-log', async(event, logs)=> {
+ipcMain.handle('update-log', async(_, logs)=> {
+ writeLogsToFile(logs);
+});
+ipcMain.handle('export-logs', async ()=> {
   try{
-    await fsp.writeFile(pathLog,JSON.stringify(logs, null , 2));
-    return {success : true}
+    const logs = await loadLogsFromFile();
+    if(!logs.success){
+      throw new Error(`hey, SWW when loading logs from file, WM: ${logs.message}`);
+    }
+    const win = BrowserWindow.getFocusedWindow();
+    const {filePath, canceled} = await dialog.showSaveDialog(win,{
+      title : 'Export Logs',
+      filters : [
+        {name : 'JSON',extensions : ['json']}
+      ], 
+      defaultPath : 'logs.json'
+    });
+    if(!filePath || canceled){
+      throw new Error('User canceled the export');
+    }
+    const data = {
+      exportTime : new Date().toISOString(),
+      logs : logs.logs
+    }  
+    await fsp.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+    return {success : true, message : 'Logs Exported Successfully'};
+  }
+     catch(err){
+      return {success : false, message : `I don't knw ? heapen, ${err.message}`};
+  }
+});
+ipcMain.handle('write-logs', async(_, logs)=> {
+  try{
+    await writeLogsToFile({logs: logs});
+    return {success : true};
   } catch(err){
     return {success : false, message : err.message};
   }
-});
+})
 ipcMain.on('exitFullScreen', () => {
   smallSize();
 });

@@ -380,3 +380,23 @@ title {
 #settings-icon {
   right: 8px;
 }
+
+.import-log-file {
+  display: none; /* Hide native input */
+}
+
+.import-log-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #4CAF50; /* Green */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.import-log-btn:hover {
+  background-color: #45a049;
+}
