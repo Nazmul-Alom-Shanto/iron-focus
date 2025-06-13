@@ -23,6 +23,7 @@ const timeUp = document.querySelector('.time-up');
 const saveTask = document.querySelector('.save-task');
 // lets 
 let title = '';
+let pause = false;
 let extraAlocatedTime = 0;
 let givenTime = 0;
 let timer = null;
@@ -63,6 +64,7 @@ function countDown(minutes){
     timeremaining = seconds;
     if(timer) clearInterval(timer);
     timer = setInterval(() => {
+        if(!pause){
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds - 3600 * h) / 60);
         const s = seconds - 3600 * h - 60 * m;
@@ -76,7 +78,7 @@ function countDown(minutes){
             clearInterval(timer);
             displayBlock(timeUp);   
             audio.play();
-        }
+        }}
     }, 1000);
 }
 
@@ -184,7 +186,9 @@ function displayBlock(block){
       dragEl.style.display = 'unset'
     }
     if(block == taskShow){
-    finishNowBtn.classList.remove('disabled');
+  finishNowBtn.classList.remove('disabled');
+  pauseResumeBtn.classList.remove('disabled');
+
     }
     if(block == timeUp) {
       fallbackTimeout = setTimeout(()=> {
@@ -192,6 +196,7 @@ function displayBlock(block){
         finishBtn.click();
       },180 * 1000);
     finishNowBtn.classList.add('disabled');
+    pauseResumeBtn.classList.add('disabled');
     }
 
 }
@@ -204,15 +209,25 @@ document.addEventListener('keydown', (e) => {
     if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() == 'r'){
         e.preventDefault();
     }
-})
+});
+// Pause & Resume
+const pauseResumeBtn = document.getElementById('pause-resume-btn');
+pauseResumeBtn.addEventListener('click', ()=> {
+  pauseResumeBtn.innerText = pauseResumeBtn.innerText === 'Pause' ? 'Resume' : 'Pause';
+  pause = !pause;
+});
 // finish now
 
 const finishNowBtn = document.getElementById('finish-now-btn');
 finishNowBtn.classList.add('disabled');
+pauseResumeBtn.classList.add('disabled');
+
 finishNowBtn.addEventListener('click', ()=> {
       extraAlocatedTime -= Math.floor(timeremaining / 60);
       finishBtn.click();
       finishNowBtn.classList.add('disabled');
+      pauseResumeBtn.classList.add('disabled');
+
       if(timer) clearInterval(timer);
 })
 // log view
