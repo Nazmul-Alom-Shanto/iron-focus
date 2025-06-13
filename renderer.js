@@ -201,8 +201,7 @@ function displayBlock(block){
     }
 
 }
-// showWarning Funtion
-showWarningMessage('hey, me a warning');
+// showWarning Funtio
 function showWarningMessage(message, bg = '#f44336', timeInSec = 3) {
   let container = document.querySelector(".warning-message-container");
   if (!container) {
@@ -332,6 +331,7 @@ showLogsBtn.addEventListener('click', async()=> {
   const importLogFile = viewLogsOverlay.querySelector('.import-log-file');
   const exportLogBtn = viewLogsOverlay.querySelector('.export-log-btn');
   const logs = await readLogs();
+  logs.sort((a,b)=> Date.parse(b.timestamp) - Date.parse(a.timestamp));
   l(JSON.stringify(logs));
   renderLogs(logs);
   async function mergeTwoLogs(log1, log2){

@@ -283,6 +283,8 @@ button:hover, input:focus , i:hover, ul:hover, li:hover,  #settings-icon:hover, 
   height: 100vh;
   z-index: 1500;
   overflow-y: auto;
+  background-color: #f4f6f9; /* light gray-blue */
+  background-color: #eaecef; /* neutral gray */
 }
 .close-btn {
   position: fixed;
@@ -482,7 +484,7 @@ tbody tr:hover {
 
 /* Timestamp styling */
 .timestamp {
-  color: #7f8c8d;
+  color: #6a7575;
   font-size: 0.9em;
   font-style: italic;
 }
