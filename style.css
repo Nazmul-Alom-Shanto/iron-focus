@@ -255,6 +255,13 @@ body {
   background: #0c4d14;
   color : #fff;
 }
+.settings-container li a {
+  color: #000;
+  text-decoration: none;
+}
+.settings-container li a:hover {
+  color: #fff;
+}
 #settings-icon:hover + .settings-container {
   display: block;
 }
