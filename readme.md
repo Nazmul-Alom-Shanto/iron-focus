@@ -61,6 +61,9 @@ If you try to minimize or close the window, the app detects it and *refuses* to 
 > ![View Log](./assets/img/view-log.png)
 > **View Log**
 
+>![Menu Option](./assets/img/menu.png);
+>**Menu**
+
 
 ## 📦 Getting Started
 
