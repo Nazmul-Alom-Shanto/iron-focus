@@ -212,8 +212,10 @@ document.addEventListener('keydown', (e) => {
 });
 // Pause & Resume
 const pauseResumeBtn = document.getElementById('pause-resume-btn');
-pauseResumeBtn.addEventListener('click', ()=> {
+pauseResumeBtn.addEventListener('click',()=> {
+  pauseResumeBtn.innerText == 'Pause' ? fullScreen(1) : fullScreen(0);
   pauseResumeBtn.innerText = pauseResumeBtn.innerText === 'Pause' ? 'Resume' : 'Pause';
+
   pause = !pause;
 });
 // finish now
