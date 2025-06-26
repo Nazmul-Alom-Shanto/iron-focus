@@ -1,6 +1,10 @@
 {
   "name": "iron-focus",
+<<<<<<< HEAD
   "version": "1.2.1",
+=======
+  "version": "1.2.0",
+>>>>>>> ui-improve
   "main": "main.js",
   "scripts": {
     "start": "electron .",

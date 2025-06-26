@@ -1,6 +1,7 @@
 
 // const {app} = require('electron');
 const { ipcRenderer} = require('electron');
+const { futimes } = require('original-fs');
 
   // const fs = require('fs');
   // const path = require('path');
@@ -200,6 +201,46 @@ function displayBlock(block){
     }
 
 }
+// showWarning Funtio
+function showWarningMessage(message, bg = '#f44336', timeInSec = 3) {
+  let container = document.querySelector(".warning-message-container");
+  if (!container) {
+      container = document.createElement("div");
+      container.className = "warning-message-container";
+      container.style.position = "fixed";
+      container.style.top = "10px";
+      container.style.right = "15px";
+      container.style.paddingLeft = "15px";
+      container.style.zIndex = "9999";
+      container.style.display = "flex";
+      container.style.flexDirection = "column";
+      container.style.gap = "5px";
+      document.body.appendChild(container);
+  }
+
+  const warning = document.createElement("div");
+  warning.className = "warning-message";
+  warning.textContent = message;
+  warning.style.background = bg; // red
+  warning.style.color = "#fff";
+  warning.style.padding = "4px 8px";
+  warning.style.borderRadius = "8px";
+  warning.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+  warning.style.fontFamily = "sans-serif";
+  warning.style.transition = "opacity 0.3s";
+  warning.style.fontSize = '13px';
+  warning.style.opacity = "1";
+
+  console.warn("Warn:", message);
+  container.appendChild(warning);
+
+  setTimeout(() => {
+      warning.style.opacity = "0";
+      setTimeout(() => {
+          warning.remove();
+      }, 300);
+  }, 1000 * timeInSec);
+}
 
 //click handleing
 document.addEventListener('contextmenu', (e) => {
@@ -256,6 +297,9 @@ showLogsBtn.addEventListener('click', async()=> {
     <input type="date" class="endDate">
     <input type="button" value="Filter" class='filter'>
     <input type="button" value="Reset" class='reset'>
+    <label for="import-log-file" class="import-log-btn">Import</label>
+    <input type="file" id="import-log-file" class="import-log-file" accept=".json">
+    <input type="button" value="Export" class='export-log-btn'>
   </div>
 
   <table>
@@ -286,9 +330,76 @@ showLogsBtn.addEventListener('click', async()=> {
 
   const filterBtn = viewLogsOverlay.querySelector('.filter')
   const resetBtn = viewLogsOverlay.querySelector('.reset');
+  const importLogFile = viewLogsOverlay.querySelector('.import-log-file');
+  const exportLogBtn = viewLogsOverlay.querySelector('.export-log-btn');
   const logs = await readLogs();
+  logs.sort((a,b)=> Date.parse(b.timestamp) - Date.parse(a.timestamp));
   l(JSON.stringify(logs));
   renderLogs(logs);
+  async function mergeTwoLogs(log1, log2){
+    const merged = [];
+    const seen = new Set();
+    for(const log of log1){
+      if(!seen.has(log.timestamp)){
+        seen.add(log.timestamp);
+        merged.push(log);
+      }
+    }
+    
+    for(const log of log2) {
+      if(!seen.has(log.timestamp)){
+        seen.add(log.timestamp);
+        merged.push(log);
+      }
+    }
+    merged.sort((a,b) => Date.parse(b.timestamp) - Date.parse(a.timestamp));
+    return merged;
+  }
+  importLogFile.addEventListener('change', async function () {
+    const file = this.files[0];
+    let data;
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = async function (e) {
+      let content = e.target.result;
+      try{
+        data = JSON.parse(content);
+      } catch(err){
+        showWarningMessage(`${err.message}`);
+      }
+      try{
+        if(data.logs){
+          const mergedLogs = await mergeTwoLogs(data.logs, logs );
+          l("merged Log :" + JSON.stringify(mergedLogs));
+          const response = await ipcRenderer.invoke('write-logs', mergedLogs);
+          if(response.success){
+            showWarningMessage("Logs have successfully Updated", "green", 2);
+          } else {
+            showWarningMessage("SWW when writting logs to file", undefined, 5);
+          }
+          renderLogs(mergedLogs);
+        } else {
+          throw new Error('imported file is corupted or Invalid');
+        }
+      }catch(err){
+        showWarningMessage(`${err.message}`,undefined, 5); 
+      }
+    }
+    reader.readAsText(file);
+    this.value = '';
+  });
+
+  exportLogBtn.addEventListener('click', async()=> {
+    const response = await ipcRenderer.invoke('export-logs');
+    if(response.success){
+      showWarningMessage('Logs Sucessfully Exported', 'green');
+    } else {
+      showWarningMessage(`SomeThing went wrong ${response.message}`);
+    }
+  });
+  
+  l(JSON.stringify(logs));
+
   function renderLogs(filteredLogs) {
     const tbody = viewLogsOverlay.querySelector('.logTableBody');
     tbody.innerHTML = '';
@@ -304,8 +415,8 @@ showLogsBtn.addEventListener('click', async()=> {
         <td  class="timestamp">${formateTimeStamp(log.timestamp)}</td>
       `;
       tbody.appendChild(row);
-      l('I am here');
-      l(`innerHTML of row is ${row.innerHTML}`);
+      // l('I am here');
+      // l(`innerHTML of row is ${row.innerHTML}`);
     });
   }
 
