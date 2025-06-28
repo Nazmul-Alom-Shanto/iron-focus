@@ -2,5 +2,6 @@ node_modules/
 dist/
 temps/
 log-tem-gpt/
-
+test
 trash/
+assets/css

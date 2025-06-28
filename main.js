@@ -88,7 +88,7 @@ function createWindow(){
     height: 133,
     frame: false,
     titleBarStyle: 'hidden',
-    opacity: 0.9,
+    opacity: 1,
     skipTaskbar: true,
     alwaysOnTop: true,
     resizable: false,
@@ -156,14 +156,17 @@ app.whenReady().then(() => {
   //   mainWindow.setAlwaysOnTop(true, 'screen-saver');
   // });
   mainWindow.setAlwaysOnTop(true, 'screen-saver'); // or 'modal-panel'
-  mainWindow.setWindowButtonVisibility(false);
-  mainWindow.on('blur', () => {
-    setTimeout(() => {
-      if (!mainWindow.isFocused()) {
-        mainWindow.focus();
-      }
-    }, 200);
-  });
+  // mainWindow.setWindowButtonVisibility(false);
+  // mainWindow.on('blur', () => {
+  //   setTimeout(() => {
+  //     if (!mainWindow.isFocused()) {
+  //       mainWindow.focus();
+  //     }
+  //   }, 200);
+  // });
+if (!app.isPackaged) {
+  app.setName('Iron-Focus-v2-test');
+}
 
   // ipcMain.on('move-window', (event, x,y) => {
   //   mainWindow.setBounds({...mainWindow.getBounds(), x,y});
@@ -272,6 +275,16 @@ ipcMain.handle('write-logs', async(_, logs)=> {
 ipcMain.on('exitFullScreen', () => {
   smallSize();
 });
+ipcMain.on('drag-window', (event, x, y) => {
+  if (mainWindow) {
+    mainWindow.setBounds({ x, y, width: mainWindow.getBounds().width, height: mainWindow.getBounds().height });
+  }
+});
+ipcMain.on('get-window-position', (event) => {
+  if (mainWindow) {
+    const bounds = mainWindow.getBounds();
+    return { x: bounds.x, y: bounds.y}
+  }});
 
 app.on('window-all-closed', (e) => {
   e.preventDefault();  

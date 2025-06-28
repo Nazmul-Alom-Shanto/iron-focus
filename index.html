@@ -1,69 +1,283 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="style.css">
-        <script src="./renderer.js" defer></script>
-        <!-- <script src="./drag.js" defer></script> -->
+<!DOCTYPE html>
+<html>
 
-        <!-- <title>Iron Focus</title> -->
-    </head>
-    <body>
-        
-       
-      <div class="body">
-        <!-- <div class="settings"> -->
-            <!-- <i class="">::</i> -->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Iron Focus</title>
+	<link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="./renderer.js" defer></script>
+</head>
 
-                <svg class="drag" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M278.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-64 64c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8l32 0 0 96-96 0 0-32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-32 96 0 0 96-32 0c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l64 64c12.5 12.5 32.8 12.5 45.3 0l64-64c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8l-32 0 0-96 96 0 0 32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 32-96 0 0-96 32 0c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-64-64z"/></svg>
-            
-           
-                <svg id="settings-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"/></svg>
-        
-           
-            <div  class="settings-container">
-                <ul>
-                    <li id="pause-resume-btn">Pause</li>
-                    <li id="finish-now-btn">Finish</li> 
-                    <li id="show-logs-btn">History</li>
-                    <li>
-                        <a href="https://nazmul-alom-shanto.github.io/" target="_blank">About Dev</a>
-                    </li>                       
-                </ul>
-            </div>
-        <!-- </div> -->
-        <div class="task-setup">
-            <input type="text" name="" id="task-name-input" placeholder="Task Title">
-            <!-- <input type="number" name="" id="task-hours-input"> -->
-            <div class="task-setup-inner">
-                <input type="number" name="" min="15" id="task-minutes-input" placeholder="Time in Minutes">
-                <button id="start-task" aria-label="Start Task">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
-                </button>
-            </div>
+<body class="dark-mde">
+    <div id="suggestions" class="suggestion-box" style="display: none;"></div>
 
-        </div>
-        <div class="task-show">
-            <h3 class="title">Chemistry CH-5</h3>
-            <span class="qoute">Time & Tided wait for none not even for Error 😎</span>
-            <div class="count-down">
-                <span class="hours">02</span>h : 
-                <span class="minutes">02</span>m : 
-                <span class="seconds">15</span>s 
-            </div>
-        </div>
-        <div class="time-up">
-            <h1>Time is Up</h1>
-            <button id="alocate-time">+10 minutes</button>
-            <button id="finish">Finish</button>
-        </div>
-        <div class="save-task">
-            <input class="save-task-title" type="text" placeholder="Title">
-            <input class="save-task-success" type="number" max="100" min="0" placeholder="Success in Percent">
-            <textarea name="info" id="save-info" placeholder="Description"></textarea>
-            <button id="save-btn">Save</button>
-        </div>
-      </div>
-    </body>
+	<svg id="gear-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+		<path
+			d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z" />
+	</svg>
+	<svg class="drag" id="drag" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+		<path
+			d="M278.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-64 64c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8l32 0 0 96-96 0 0-32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-32 96 0 0 96-32 0c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l64 64c12.5 12.5 32.8 12.5 45.3 0l64-64c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8l-32 0 0-96 96 0 0 32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 32-96 0 0-96 32 0c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-64-64z" />
+	</svg>
+
+
+	<div class="overlay" id="menu-overlay">
+		<div class="option disabled" id="menu-btn-pause" onclick="togglePause()" draggable="true">⏸️ <span>Pause</span>
+		</div>
+		<div class="option disabled" id="menu-btn-finish" onclick="handleFinish()">✅ <span>Finish</span></div>
+		<div class="option" onclick="this.parentElement.style.display='none'">❌ <span>Close</span></div>
+		<div class="option" onclick="addOrSwitchTask()" id="menu-btn-add-switch">➕ <span>Add Task</span></div>
+		<div class="option" onclick="switchSection('task-settings')" id="menu-btn-settings">⚙️ <span>Settings</span>
+		</div>
+		<div class="option" id="menu-btn-about">👤 <span>About</span></div>
+	</div>
+
+
+	<section class="task-start" id="task-start">
+		<div class="task-start-container">
+			<!--left side castom task-->
+			<div class="card">
+				<h2>📝 Start a Custom Task</h2>
+				<form id="custom-form">
+					<div class="form-group">
+						<label for="task-start-title">Task Title</label>
+						<input type="text" id="task-start-title" required placeholder="e.g., Revise Chemistry Notes" />
+					</div>
+
+					<div class="form-group">
+						<label for="time">Estimated Time</label>
+						<div class="range-label">
+							<span>10 min</span>
+							<span id="start-task-time-display">45 min</span>
+							<span>120 min</span>
+						</div>
+						<input type="range" id="start-task-time-slider" min="10" max="120" value="45" />
+					</div>
+					<div class="form-group">
+						<label for="task-start-tags">Tags </label>
+						<input type="text" id="task-start-tags" placeholder="e.g., study, math" />
+					</div>
+					<div class="form-group">
+						<label for="why">Why this task? <small>(optional)</small></label>
+						<textarea id="why" rows="3"
+							placeholder="Helps stay focused, it's part of daily goals…"></textarea>
+					</div>
+
+					<button type="submit" class="start-btn">✔ Start Task</button>
+				</form>
+			</div>
+			<!--right task pre defined view-->
+			<div class="card" id="task-start-template">
+				<h2>📋 Your Daily Tasks</h2>
+				<div class="templates" id="task-start-template-container">
+					<!-- Template buttons will be dynamically added here -->
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="task-show" id="task-show">
+		<div class="title" id="task-show-title" title="Task: Revise Physics Ch 4">Revise Physics Ch 4Revise Physics Ch 4
+		</div>
+		<div class="quote" id="task-show-quote">"Success is the sum of small efforts."</div>
+		<div class="countdown" id="task-show-countdown">00:00:00</div>
+		<div class="task-show-progress-container">
+			<div class="progress-bar" id="task-show-progress"></div>
+		</div>
+	</section>
+	<section tabindex="0" class="task-paused" id="task-paused">
+		<div class="pause-card">
+			<h1>⏸ Paused</h1>
+			<div class="task-paused-title" id="task-paused-title">Revise Physics Ch 4</div>
+			<div class="timing" id="task-paused-timing">
+				⏱ Elapsed: 07:12 &nbsp;&nbsp;&nbsp; ⌛ Remaining: 17:48
+			</div>
+			<div class="progress-container">
+				<div class="progress-bar" id="task-paused-progress" style="width: 40%"></div>
+			</div>
+			<div class="quote">“You paused. That’s fine. But don’t stop.”</div>
+			<button class="resume-btn" onclick="togglePause()" id="resume">Resume Task</button>
+			<div class="shortcut-hint">(Press <b>Enter</b> or <b>Space</b> to resume)</div>
+		</div>
+	</section>
+	<section class="task-time-up-mini" id="task-time-up-mini">
+		<h1>TIME IS UP!</h1>
+		<div class="task-title" id="task-time-up-mini-title">Revise Physics Ch 4</div>
+		<div class="time-spent" id="task-time-up-mini-time-spent">27:32</div>
+		<div class="actions" role="group" aria-label="Time extension and finish actions">
+			<button id="extend-10" onclick="extendTime(10)" type="button"
+				aria-label="Extend time by 10 minutes">+10m</button>
+			<button id="extend-20" onclick="extendTime(20)" type="button"
+				aria-label="Extend time by 20 minutes">+20m</button>
+			<button id="finish-task" onclick="displayTaskSave()" type="button" aria-label="Finish task">Finish</button>
+		</div>
+	</section>
+	<section id="task-time-up" class="task-time-up">
+
+		<div class="task-time-up-container">
+			<header>
+				<h1 id="timeUpTitle">TIME IS UP!</h1>
+			</header>
+			<main>
+				<h2 class="task-title" id="task-time-up-title">Revise Physics Chapter 4</h2>
+				<p class="time-spent" id="task-time-up-time-spent">⏳ Time Spent: 27:32</p>
+				<div class="actions" role="group" aria-label="Time extension and finish actions">
+					<button id="extend-10" type="button" onclick="extendTime(10)"
+						aria-label="Extend time by 10 minutes">+10
+						min</button>
+					<button id="extend-20" type="button" onclick="extendTime(20)"
+						aria-label="Extend time by 20 minutes">+20
+						min</button>
+					<button id="finish-task" type="button" onclick="displayTaskSave()"
+						aria-label="Finish the current task">Finish Task</button>
+
+				</div>
+			</main>
+			<footer>
+				<small>(Keyboard: Enter = Finish, 1 = +10 min, 2 = +20 min)</small>
+			</footer>
+		</div>
+	</section>
+	<section id="task-save" class="task-save">
+		<div class="form-card">
+			<form id="task-save-form">
+				<div class="form-group">
+					<label for="task-save-title">📝 Task Title</label>
+					<input type="text" id="task-save-title" name="title" placeholder="e.g., Solved Math Mock Test"
+						required />
+				</div>
+
+				<div class="form-group">
+					<label for="task-save-tags">🏷️ Tags</label>
+					<input type="text" id="task-save-tags" name="tags" placeholder="e.g., math, revision" />
+					<div class="tag-hint">Use commas. Suggestions soon.</div>
+				</div>
+
+				<div class="form-group">
+					<label for="success">🎯 Success Rate</label>
+					<div class="success-value">
+						<span>0%</span>
+						<span id="task-save-success-display">50%</span>
+						<span>100%</span>
+					</div>
+					<input type="range" id="task-save-success" name="successRate" min="0" max="100" value="50" />
+				</div>
+
+				<div class="form-group">
+					<label for="task-save-reflection">🪞 Reflection (optional)</label>
+					<textarea id="task-save-reflection" name="reflection" rows="4"
+						placeholder="Short insight about the task…"></textarea>
+				</div>
+
+				<div class="btns">
+					<button type="submit">✔ Save Entry</button>
+					<button id="task-save-back-btn" type="button" onclick="handleFinishBack()">Back</button>
+				</div>
+			</form>
+		</div>
+	</section>
+	<section id="task-settings" class="task-settings">
+		<div class="settings-sidebar">
+			<button class="back-button" onclick="closeSettings()">← Back</button>
+			<button class="active" onclick="switchSettingsSection(this, 'general-settings')">General Settings</button>
+			<button onclick="switchSettingsSection(this, 'timer-settings')">Timer Settings</button>
+			<button onclick="switchSettingsSection(this, 'template')">Daily Template</button>
+			<button onclick="switchSettingsSection(this, 'my-tasks')">My Tasks</button>
+			<button onclick="switchSettingsSection(this, 'reports')">Reports</button>
+			<button onclick="switchSettingsSection(this, 'import-export')">Export & Import</button>
+			<button onclick="switchSettingsSection(this, 'about')">About</button>
+		</div>
+
+		<div class="settings-view">
+
+			<div class="settings-section card" id='general-settings'>
+				<h2>General Settings</h2>
+				<label>Theme:
+					<select onchange="toggleTheme(this.value)">
+						<option value="light">Light</option>
+						<option value="dark">Dark</option>
+					</select>
+				</label>
+			</div>
+			<div class="settings-section card" style="display: none;" id='timer-settings'>
+				<h2>Timer Settings</h2>
+				<p>Configure default durations, break times, and auto-pause behavior here.</p>
+			</div>
+
+			<div class="settings-section card" style="display: none;" id='template'>
+				<h2>Daily Template</h2>
+				<div class="task-creator">
+					<input type="text" id="taskList-title" placeholder="Task Title">
+					<input type="number" id="taskList-time" placeholder="Time (min)" min="0">
+					<input type="text" id="taskList-tags" placeholder="Tags (comma separated)">
+					<button onclick="addTaskToTemplate()">Add Task</button>
+				</div>
+				<div class="task-list" id="taskList"></div>
+			</div>
+
+			<div class="settings-section card" style="display: none;" id='my-tasks'>
+
+				<!-- <h2>My Tasks</h2> -->
+				<div class="tab-nav">
+					<button class="active" onclick="switchTab(this, 'today')">Today</button>
+					<button onclick="switchTab(this, 'tomorrow')">Tomorrow</button>
+				</div>
+				<div id="today" class="task-tab">
+					<div class="task-creator">
+						<input type="text" id="todayTaskList-title" placeholder="Task Title">
+						<input type="number" id="todayTaskList-time" placeholder="Time (min)" min="0">
+						<input type="text" id="todayTaskList-tags" placeholder="Tags (comma separated)">
+						<button onclick="addTaskToTemplate(undefined, 'todayTaskList')">Add Task</button>
+					</div>
+					<div class="task-list" id="todayTaskList"></div>
+				</div>
+				<div id="tomorrow" class="task-tab" style="display:none">
+					<div class="task-creator">
+						<input type="text" id="tomorrowTaskList-title" placeholder="Task Title">
+						<input type="number" id="tomorrowTaskList-time" placeholder="Time (min)" min="0">
+						<input type="text" id="tomorrowTaskList-tags" placeholder="Tags (comma separated)">
+						<button onclick="addTaskToTemplate(undefined, 'tomorrowTaskList')">Add Task</button>
+					</div>
+					<div class="task-list" id="tomorrowTaskList"></div>
+				</div>
+
+			</div>
+			<div class="settings-section card" style="display: none;" id='reports'>
+				<div class="tab-nav">
+					<button class="active" onclick="switchTab(this, 'history')">History</button>
+					<button onclick="switchTab(this, 'pie-chart')">Tag Analysis</button>
+				</div>
+				<div id="history" class="report-tab">
+					<p>(Demo: Table of completed tasks)</p>
+				</div>
+				<div id="pie-chart" class="report-tab pie-chart" style="display:none">
+					<div class="dashboard-container">
+						<div class="warper">
+							<h2 class="center-label" id="chartTitle">Total Time</h2>
+							<canvas id="tagChart" width="400" height="400"></canvas>
+							<button id="backBtn" style="display:none;" class="center-btn">Previous</button>
+						</div>
+						<div class="tag-summary-container"></div>
+					</div>
+					</div>
+			</div>
+			<div class="settings-section card" style="display: none;" id='import-export'>
+				<h2>Export & Import</h2>
+				<p>Export your settings or restore from a backup.</p>
+			</div>
+
+			<div class="settings-section card" style="display: none;" id='about'>
+				<h1>About</h1>
+				<h2>About IronFocus</h2>
+				<p>Version 1.0. Built by Shanto with focus and purpose.</p>
+			</div>
+		</div>
+
+	</section>
+
+</body>
+
 </html>
