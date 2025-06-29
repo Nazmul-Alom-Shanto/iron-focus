@@ -4,6 +4,7 @@ const settings = document.getElementById('task-settings');
 const taskStartTemplateContainer = document.getElementById('task-start-template-container');
 const taskStartTitle = document.getElementById('task-start-title');
 const taskStartTags = document.getElementById('task-start-tags');
+const taskStartTagsContainer = document.querySelector('.start-task-tags');
 
 const gearIcon = document.getElementById('gear-icon');
 const menuOverlay = document.getElementById('menu-overlay');
@@ -40,9 +41,15 @@ const taskSaveForm = document.getElementById('task-save-form');
 const taskSaveTitle = document.getElementById('task-save-title');
 const taskSaveSuccessRange = document.getElementById('task-save-success');
 const taskSaveTags = document.getElementById('task-save-tags');
+const taskSaveTagsContainer = document.querySelector('.task-save-tags-container');
 const taskSaveReflection = document.getElementById('task-save-reflection');
 const taskSaveBackBtn = document.getElementById('task-save-back-btn');
 const taskSaveSuccessDisplay = document.getElementById('task-save-success-display');
+
+
+const settingsTemplateTagsContainer = document.querySelector('.settings-template-tags-container');
+const todayTaskListTagsContainer = document.querySelector('.today-task-list-tags-container');
+const tomorrowTaskListTagsContainer = document.querySelector('.tomorrow-task-list-tags-container');
 
 
 const timeUpMiniFallbackDuration = 3; // sec
@@ -93,6 +100,207 @@ const dummyTaskTemplate = [
   }
 ] 
 
+let selectedIndex = -1;
+
+    const dummytagTree = {
+      study: {
+        math: {
+          calculus: {},
+          algebra: {}
+        },
+        physics: {}
+      },
+      work: {
+        js: {},
+        design: {}
+      },
+      'bro hey' : {}
+    };
+
+
+
+  class TagInput {
+    constructor(container, tree, preFillTags = []) {
+      this.container = container;
+      this.tree = tree;
+      this.selectedTags = [...preFillTags];
+      this.selectedIndex = -1;
+
+      // Create input
+      this.input = document.createElement("input");
+      this.input.type = "text";
+      this.input.autocomplete = "off";
+      // this.input.className = "tags-input"
+      this.input.className = "invisible-input";
+
+      if(this.container) {
+        this.container.appendChild(this.input);
+        this.updateUI();  
+        this.bindEvents();
+      }
+
+      // Create fixed suggestion box
+      this.suggestionBox = document.createElement("div");
+      this.suggestionBox.className = "suggestion-box";
+      document.body.appendChild(this.suggestionBox);
+
+      
+      
+    }
+
+    bindEvents() {
+      if(this._eventBound) return;
+      this._eventBound = true;
+      this.input.addEventListener("input", () => this.showSuggestions());
+      this.input.addEventListener("keydown", e => this.onKeyDown(e));
+      document.addEventListener("click", e => {
+        if (!this.container.contains(e.target) && !this.suggestionBox.contains(e.target)) {
+          this.suggestionBox.style.display = "none";
+        }
+      });
+        this.container.addEventListener("click", () => {
+        this.input.focus();
+        this.showSuggestions();
+        });
+    }
+
+    updateUI() {
+      this.container.innerHTML = "";
+      this.selectedTags.forEach((tag, i) => {
+        const span = document.createElement("span");
+        span.className = "tag-chip";
+        span.textContent = tag;
+
+        // Remove button
+        // const btn = document.createElement("button");
+        // btn.textContent = "×";
+        // btn.className = "remove";
+        // btn.onclick = () => {
+        //   this.selectedTags.splice(i, 1);
+        //   this.updateUI();
+        // };
+
+        // span.appendChild(btn);
+        this.container.appendChild(span);
+      });
+      this.container.appendChild(this.input);
+      this.input.focus();
+      setTimeout(() => this.showSuggestions(), 100);
+    }
+
+    getTagsAtPath(path) {
+      let node = this.tree;
+      for (const part of path) {
+        if (!node[part]) return [];
+        node = node[part];
+      }
+      return Object.keys(node);
+    }
+
+    getFilteredSuggestions(inputValue) {
+      const parts = inputValue.split(",").map(p => p.trim()).filter(Boolean);
+      const path = parts.slice(0, -1);
+      const token = parts[parts.length - 1] || "";
+      const children = this.getTagsAtPath(this.selectedTags);
+      return children.filter(child => child.toLowerCase().startsWith(token.toLowerCase()));
+    }
+
+    showSuggestions() {
+      this.selectedIndex = -1;
+      const val = this.input.value;
+      const suggestions = this.getFilteredSuggestions(val);
+      this.suggestionBox.innerHTML = "";
+      if (suggestions.length === 0) {
+        this.suggestionBox.style.display = "none";
+        return;
+      }
+
+      suggestions.forEach(suggestion => {
+        const item = document.createElement("div");
+        item.className = "suggestion-item";
+        item.textContent = suggestion;
+        item.onclick = () => {
+          this.selectedTags.push(suggestion);
+          this.input.value = "";
+          this.updateUI();
+          this.suggestionBox.style.display = "none";
+        };
+        this.suggestionBox.appendChild(item);
+      });
+
+      const rect = this.container.getBoundingClientRect();
+      this.suggestionBox.style.top = `${rect.bottom + window.scrollY}px`;
+      this.suggestionBox.style.left = `${rect.left + window.scrollX}px`;
+      this.suggestionBox.style.width = `${rect.width}px`;
+      this.suggestionBox.style.display = "block";
+    }
+
+    highlightSuggestion(items, index) {
+      items.forEach((item, i) => {
+        item.classList.toggle("highlighted", i === index);
+      });
+    }
+
+    onKeyDown(e) {
+      const items = this.suggestionBox.querySelectorAll(".suggestion-item");
+
+      if ((e.key === "ArrowDown" || (e.key === "Tab" && !e.shiftKey)) && items.length > 0) {
+        e.preventDefault();
+        this.selectedIndex = (this.selectedIndex + 1) % items.length;
+        this.highlightSuggestion(items, this.selectedIndex);
+      } else if ((e.key === "ArrowUp" || (e.key === "Tab" && e.shiftKey)) && items.length > 0) {
+        e.preventDefault();
+        this.selectedIndex = (this.selectedIndex - 1 + items.length) % items.length;
+        this.highlightSuggestion(items, this.selectedIndex);
+      } else if (e.key === "Enter" && this.selectedIndex !== -1 && items.length > 0) {
+        e.preventDefault();
+        items[this.selectedIndex].click();
+      } else if (e.key === "," && this.input.value.trim()) {
+        e.preventDefault();
+        this.selectedTags.push(this.input.value.trim());
+        this.input.value = "";
+        this.updateUI();
+        this.selectedIndex = -1;
+      } else if (e.key === "Backspace" && this.input.value === "") {
+        this.selectedTags.pop();
+        this.updateUI();
+        this.selectedIndex = -1;
+      }
+    }
+
+    // Public method: update tags externally
+    updateTags(newTags) {
+      this.selectedTags = [...newTags];
+      this.updateUI();
+    }
+
+    // Public method: get current tags
+    getTags() {
+      return [...this.selectedTags];
+    }
+  // update container
+    updateContainer(container) {
+      if(!container || !(container instanceof HTMLElement)) {
+        throw new Error('Invalid container element');
+      }
+      // if(!this._containerBound){
+      //     this.container.addEventListener("click", () => {
+      //     this.input.focus();
+      //     this.showSuggestions();
+      // });
+      // this._containerBound = true;
+      // }
+      this.container = container;
+      this.updateUI();
+      this.bindEvents();
+    }
+    // Cleanup if needed
+    destroy() {
+      this.suggestionBox.remove();
+      this.container.innerHTML = "";
+    }
+  }
+
   function displayPaused() {
     taskPausedTitle.textContent = tasks[currTasks].title;
     taskPausedTiming.innerHTML = `⏱ Elapsed: ${formatTime(tasks[currTasks].secondsPassed)}&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;⌛ Remaining: ${formatTime(tasks[currTasks].secondsLeft)}`;
@@ -103,6 +311,7 @@ const dummyTaskTemplate = [
   function injectDataToTimeUps(){
     timeUpMiniTitle.textContent = tasks[currTasks].title;
     timeUpMiniTimeSpent.textContent = `⏳ ${formatTime(tasks[currTasks].secondsPassed)}`;
+    timeUpTitle.textContent = tasks[currTasks].title;
     timeUpTimeSpent.textContent = `⏳ ${formatTime(tasks[currTasks].secondsPassed)}`;
   }
    function addOrSwitchTask() {
@@ -143,6 +352,9 @@ const dummyTaskTemplate = [
       } else {
         gearIcon.classList.add('show');
         fullScreen(true);
+      }
+      if(sectionId === 'task-save') {
+        drag.classList.remove('show');
       }
       if(sectionId === 'task-settings'){
         gearIcon.classList.remove('show');
@@ -201,6 +413,7 @@ const dummyTaskTemplate = [
     if(!tasks[currTasks]) return;
     if(menuBtnFinish.classList.contains('disabled')) return;
     // menuOverlay.style.display = 'none';
+    updateSliderBackground(taskSaveSuccessRange)
     if(tasks[currTasks].secondsLeft > 0) {
       tasks[currTasks].paused = true;
       displayTaskSave();
@@ -223,6 +436,7 @@ const dummyTaskTemplate = [
       // do nothing
     } else if(taskShow.classList.contains('visible')) {
         switchSection('task-time-up-mini');
+        injectDataToTimeUps();
         if(timeUpMiniFallback) clearTimeout(timeUpMiniFallback);
         timeUpMiniFallback = setTimeout(() => {
           tasks[currTasks].extraTime += timeUpMiniFallbackDuration;
@@ -251,7 +465,7 @@ const dummyTaskTemplate = [
   }
   function startTask(title, time, tags) {
     // next work  
-
+    console.log(`Starting task: ${title}, Time: ${time} min, Tags: ${JSON.stringify(tags)}`);
     switchSection('task-show');
     
     totalSeconds = time * 60;
@@ -359,7 +573,7 @@ dummyTaskTemplate.forEach(task => {
       startTaskTimeSlider.value = task.time;
       startTaskTimeDisplay.textContent = `${task.time} min`;
       updateSliderBackground(startTaskTimeSlider);
-      taskStartTags.value = task.tags.join(', ');
+      taskStartTagInputSuggestor.updateTags(task.tags);
     } else {
       startTask(task.title, task.time, task.tags);
     }
@@ -371,7 +585,8 @@ dummyTaskTemplate.forEach(task => {
 const startTaskForm = document.getElementById('custom-form');
 startTaskForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  startTask(taskStartTitle.value, startTaskTimeSlider.value, taskStartTags.value.split(','));
+  const tags = taskStartTagInputSuggestor.getTags();
+  startTask(taskStartTitle.value, startTaskTimeSlider.value, tags);
 });
 
 // task paused
@@ -404,14 +619,15 @@ function extendTime(min){
 function preFillSaveForm() {
   taskSaveTitle.value = tasks[currTasks].title;
   taskSaveSuccessRange.value = 75;
-  taskSaveTags.value = tasks[currTasks].tags.join(', ');
+  // taskSaveTags.value = s
+  taskSaveTagInputSuggestor.updateTags(tasks[currTasks].tags);
 }
 
 taskSaveForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const title = taskSaveTitle.value;
   const success = parseInt(taskSaveSuccessRange.value);
-  const tags = taskSaveForm.querySelector('#task-save-tags').value.split(',').map(tag => tag.trim());
+  const tags = taskSaveTagInputSuggestor.getTags();
   alert('submittet');
 });
 
@@ -498,7 +714,13 @@ function addTaskToTemplate(taskList = dummyTaskTemplate, containerId = "taskList
            
       const title = document.getElementById(`${containerId}-title`).value.trim();
       const time = document.getElementById(`${containerId}-time`).value.trim();
-      const tags = document.getElementById(`${containerId}-tags`).value.trim().split(',').map(t => t.trim()).filter(Boolean);
+      // const tags = document.getElementById(`${containerId}-tags`).value.trim().split(',').map(t => t.trim()).filter(Boolean);
+      const templateTagInputMap = {
+        taskList: settingsTemplateTagInputSuggestor,
+        todayTaskList: todayTaskListTagInputSuggestor,
+        tomorrowTaskList: tomorrowTaskListTagInputSuggestor
+      }
+      const tags = templateTagInputMap[containerId]?.getTags() ?? [];
       console.log(`Title: ${title}, Time: ${time}, Tags: ${tags.join(', ')}`);
       if (!title || !time) return;
 
@@ -510,6 +732,9 @@ function addTaskToTemplate(taskList = dummyTaskTemplate, containerId = "taskList
       document.getElementById(`${containerId}-time}`).value = "";
       document.getElementById(`${containerId}-tags`).value = "";
     }
+    // const tagInputContainerEdit = container.querySelectorAll('.settings-template-tags-container-edit');
+    const tagInputContainerEditSuggestor = new TagInput(null, dummytagTree, [] );
+     
 renderTasks(dummyTaskTemplate, 'taskList');
     function renderTasks(taskList = dummyTaskTemplate, containerId = "taskList") {
       console.log(`Rendering tasks in container: ${containerId}`);
@@ -519,17 +744,20 @@ renderTasks(dummyTaskTemplate, 'taskList');
       taskList.forEach((task, index) => {
         const card = document.createElement("div");
         card.className = "task-card" + (task.editing ? " editing-card" : "");
-
+        // const taggForPreFill = tagInputContainerEditSuggestor.getTags();
         if (task.editing) {
           card.innerHTML = `
             <input class="task-editing" type="text" value="${task.title}" id="edit-title-${index}">
             <input class="task-editing" type="number" value="${task.time}" id="edit-time-${index}">
-            <input class="task-editing" type="text" value="${task.tags.join(', ')}" id="edit-tags-${index}">
+            <!--input class="task-editing" type="text" value="${task.tags.join(', ')}" id="edit-tags-${index}"-->
+						<div class="settings-template-tags-container-edit tag-input-container"></div>
             <div class="task-actions">
               <button class="edit-btn save" data-index="${index}" ><i class="fas fa-check"></i></button>
               <button class="delete-btn cancel" data-index="${index}"><i class="fas fa-xmark"></i></button>
             </div>
           `;
+          tagInputContainerEditSuggestor.updateContainer(card.querySelector('.settings-template-tags-container-edit'));
+          tagInputContainerEditSuggestor.updateTags(task.tags);
         } else {
           card.innerHTML = `
             <div class="task-main">
@@ -546,7 +774,7 @@ renderTasks(dummyTaskTemplate, 'taskList');
 
         container.appendChild(card);
       });
-      container.querySelectorAll('.edit').forEach(btn => {
+     container.querySelectorAll('.edit').forEach(btn => {
         btn.onclick = () => editTask(+btn.dataset.index, taskList, containerId);
       });
        container.querySelectorAll('.delete').forEach(btn => {
@@ -560,6 +788,11 @@ renderTasks(dummyTaskTemplate, 'taskList');
     }
 
     function editTask(index, taskList = dummyTaskTemplate, containerId = "taskList") {
+      // save all other 
+        const container = document.getElementById(containerId);
+        container.querySelectorAll('.save').forEach(btn => {
+        btn.click();
+      });
       console.log(`Editing task at index ${index}`);
       taskList[index].editing = true;
       renderTasks(taskList, containerId);
@@ -573,8 +806,8 @@ renderTasks(dummyTaskTemplate, 'taskList');
     function saveTask(index, taskList = dummyTaskTemplate, containerId = "taskList") {
       const title = document.getElementById(`edit-title-${index}`).value.trim();
       const time = document.getElementById(`edit-time-${index}`).value.trim();
-      const tags = document.getElementById(`edit-tags-${index}`).value.trim().split(',').map(t => t.trim()).filter(Boolean);
-
+      // const tags = document.getElementById(`edit-tags-${index}`).value.trim().split(',').map(t => t.trim()).filter(Boolean);
+      const tags = tagInputContainerEditSuggestor.getTags();
       if (!title || !time) return;
 
       dummyTaskTemplate[index] = { title, time, tags, editing: false };
@@ -1006,149 +1239,31 @@ function formatHours(hours) {
 renderChart();
 
 /// intigrate the auto tag suggestion
-let selectedIndex = -1;
-
-    const dummytagTree = {
-      study: {
-        math: {
-          calculus: {},
-          algebra: {}
-        },
-        physics: {}
-      },
-      work: {
-        js: {},
-        design: {}
-      },
-      'bro hey' : {}
-    };
-
-    function getTagsAtPath(tree, path) {
-      let node = tree;
-      for (const part of path) {
-        if (!node[part]) return [];
-        node = node[part];
-      }
-      return Object.keys(node);
-    }
-
-    function initTagInput(container, suggestionBox, tree) {
-      const input = document.createElement("input");
-      container.appendChild(input);
-
-      let selectedTags = [];
-
-      function updateUI() {
-        container.innerHTML = "";
-        selectedTags.forEach((tag, i) => {
-          const span = document.createElement("span");
-          span.className = "tag-chip";
-          span.textContent = tag;
-          container.appendChild(span);
-        });
-        container.appendChild(input);
-        input.focus();
-        setTimeout(()=> {
-            showSuggestions();
-        }, 100);
-      }
-
-      function getFilteredSuggestions(inputValue) {
-        const parts = inputValue.split(",").map(p => p.trim()).filter(Boolean);
-        const path = parts.slice(0, -1);
-        const token = parts[parts.length - 1] || "";
-        const children = getTagsAtPath(tree, selectedTags);
-        console.log(`Current path: ${path.join(" > ")}, token: ${token}`);
-        console.log(`Children at path: ${JSON.stringify(children)}`);
-        return children.filter(child => child.toLowerCase().startsWith(token.toLowerCase()));
-      }
-      function showSuggestions()  {
-        selectedIndex = -1;
-        const val = input.value;
-        console.log(`Input value: a${val}a`);
-        const suggestions = getFilteredSuggestions(val);
-        console.log(`Suggestions: ${JSON.stringify(suggestions)}`);
-        suggestionBox.innerHTML = "";
-        if (suggestions.length === 0) {
-          suggestionBox.style.display = "none";
-            console.log("No suggestions found");
-          return;
-        }
-    
-        suggestions.forEach(suggestion => {
-          const item = document.createElement("div");
-          item.className = "suggestion-item";
-          item.textContent = suggestion;
-          item.onclick = () => {
-            selectedTags.push(suggestion);
-            input.value = " ";
-            updateUI();
-            suggestionBox.style.display = "none";
-          };
-          suggestionBox.appendChild(item);
-        });
-
-        const rect = container.getBoundingClientRect();
-        suggestionBox.style.top = `${rect.bottom + window.scrollY}px`;
-        suggestionBox.style.left = `${rect.left + window.scrollX}px`;
-        suggestionBox.style.width = `${rect.width}px`;
-        suggestionBox.style.display = "block";
-      }
 
 
-      input.addEventListener("input", showSuggestions);
-
-      input.addEventListener("keydown", (e) => {
-  const items = suggestionBox.querySelectorAll(".suggestion-item");
-
-   if ((e.key === "ArrowDown" || (e.key === "Tab" && !e.shiftKey)) && items.length > 0) {
-    e.preventDefault();
-    selectedIndex = (selectedIndex + 1) % items.length;
-    highlightSuggestion(items, selectedIndex);
-  } else if(e.key === "Tab" && items.length === 0){
-    // do nothing, just allow tab to move focus
-  } else if ((e.key === "ArrowUp" || (e.key === "Tab" && e.shiftKey)) && items.length > 0) {
-    e.preventDefault();
-    selectedIndex = (selectedIndex - 1 + items.length) % items.length;
-    highlightSuggestion(items, selectedIndex);} else if (e.key === "Enter" && selectedIndex !== -1 && items.length > 0) {
-    e.preventDefault();
-    items[selectedIndex].click();
-  } else if (e.key === "," && input.value.trim()) {
-    e.preventDefault();
-    selectedTags.push(input.value.trim());
-    input.value = "";
-    updateUI();
-    selectedIndex = -1;
-  } else if (e.key === "Backspace" && input.value === "") {
-    selectedTags.pop();
-    updateUI();
-    selectedIndex = -1;
-  }
-});
-
-      document.addEventListener("click", e => {
-        if (!container.contains(e.target) && !suggestionBox.contains(e.target)) {
-          suggestionBox.style.display = "none";
-        }
-      });
-      container.addEventListener("click", () => {
-        input.focus();
-        showSuggestions();
-      });
-    }
-    function highlightSuggestion(items, index) {
-  items.forEach((item, i) => {
-    item.classList.toggle("highlighted", i === index);
-  });
-}
-
-    initTagInput(
-      document.getElementById("tagInput"),
-      document.getElementById("suggestions"),
-      dummytagTree
-    );
-    document.getElementById("btn").addEventListener("click", () => {
-      const tags = Array.from(document.querySelectorAll(".tag-chip")).map(tag => tag.textContent);
-      console.log("Selected Tags:", tags);
-      alert(`Selected Tags: ${tags.join(", ")}`);
-    });
+// Initialize the tag input with the dummy tree and pre-filled tags
+const taskStartTagInputSuggestor = new TagInput(
+   taskStartTagsContainer,
+  dummytagTree,
+  []
+);
+const taskSaveTagInputSuggestor = new TagInput(
+  taskSaveTagsContainer,
+  dummytagTree,
+  []
+);
+const settingsTemplateTagInputSuggestor = new TagInput(
+  settingsTemplateTagsContainer,
+  dummytagTree,
+  []
+);
+const todayTaskListTagInputSuggestor = new TagInput(
+  todayTaskListTagsContainer,
+  dummytagTree,
+  []
+);
+const tomorrowTaskListTagInputSuggestor = new TagInput(
+  tomorrowTaskListTagsContainer,
+  dummytagTree,
+  []
+);

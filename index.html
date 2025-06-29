@@ -59,7 +59,9 @@
 					</div>
 					<div class="form-group">
 						<label for="task-start-tags">Tags </label>
-						<input type="text" id="task-start-tags" placeholder="e.g., study, math" />
+						<div class="start-task-tags tag-input-container">
+						<!-- <input type="text" id="task-start-tags" placeholder="e.g., study, math" /> -->
+						</div>
 					</div>
 					<div class="form-group">
 						<label for="why">Why this task? <small>(optional)</small></label>
@@ -152,7 +154,8 @@
 
 				<div class="form-group">
 					<label for="task-save-tags">🏷️ Tags</label>
-					<input type="text" id="task-save-tags" name="tags" placeholder="e.g., math, revision" />
+					<!-- <input type="text" id="task-save-tags" name="tags" placeholder="e.g., math, revision" /> -->
+						<div class="task-save-tags-container tag-input-container"></div>
 					<div class="tag-hint">Use commas. Suggestions soon.</div>
 				</div>
 
@@ -210,10 +213,14 @@
 			<div class="settings-section card" style="display: none;" id='template'>
 				<h2>Daily Template</h2>
 				<div class="task-creator">
-					<input type="text" id="taskList-title" placeholder="Task Title">
-					<input type="number" id="taskList-time" placeholder="Time (min)" min="0">
-					<input type="text" id="taskList-tags" placeholder="Tags (comma separated)">
-					<button onclick="addTaskToTemplate()">Add Task</button>
+					<div class="inputs">
+						<input type="text" id="taskList-title" placeholder="Task Title">
+						<input type="number" id="taskList-time" placeholder="Time (min)" min="0">
+					</div>
+					<div class="tag-and-btn">
+						<div class="settings-template-tags-container tag-input-container"></div>
+						<button onclick="addTaskToTemplate()">Add Task</button>
+					</div>
 				</div>
 				<div class="task-list" id="taskList"></div>
 			</div>
@@ -227,22 +234,31 @@
 				</div>
 				<div id="today" class="task-tab">
 					<div class="task-creator">
-						<input type="text" id="todayTaskList-title" placeholder="Task Title">
-						<input type="number" id="todayTaskList-time" placeholder="Time (min)" min="0">
-						<input type="text" id="todayTaskList-tags" placeholder="Tags (comma separated)">
-						<button onclick="addTaskToTemplate(undefined, 'todayTaskList')">Add Task</button>
+						<div class="inputs">
+							<input type="text" id="todayTaskList-title" placeholder="Task Title">
+							<input type="number" id="todayTaskList-time" placeholder="Time (min)" min="0">
+						</div>
+						<div class="tag-and-btn">
+							<div class="today-task-list-tags-container tag-input-container"></div>
+							<button onclick="addTaskToTemplate( undefined, 'todayTaskList')">Add Task</button>
+						</div>
 					</div>
 					<div class="task-list" id="todayTaskList"></div>
 				</div>
 				<div id="tomorrow" class="task-tab" style="display:none">
 					<div class="task-creator">
-						<input type="text" id="tomorrowTaskList-title" placeholder="Task Title">
-						<input type="number" id="tomorrowTaskList-time" placeholder="Time (min)" min="0">
-						<input type="text" id="tomorrowTaskList-tags" placeholder="Tags (comma separated)">
-						<button onclick="addTaskToTemplate(undefined, 'tomorrowTaskList')">Add Task</button>
+						<div class="inputs">
+							<input type="text" id="tomorrowTaskList-title" placeholder="Task Title">
+							<input type="number" id="tomorrowTaskList-time" placeholder="Time (min)" min="0">
+						</div>
+						<div class="tag-and-btn">
+							<div class="tomorrow-task-list-tags-container tag-input-container"></div>
+							<button onclick="addTaskToTemplate( undefined, 'tomorrowTaskList')">Add Task</button>
+						</div>
 					</div>
 					<div class="task-list" id="tomorrowTaskList"></div>
 				</div>
+
 
 			</div>
 			<div class="settings-section card" style="display: none;" id='reports'>
