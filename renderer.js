@@ -477,7 +477,8 @@ let selectedIndex = -1;
         secondsPassed : 0,
         extraTime : 0, 
         tags : tags,
-        paused : false
+        paused : false,
+        startAt : Date.now().toISOString().slice(0, 10)
       }
       if(!timer) timer = setInterval(updateTimer, 1000);
       taskShowTitle.textContent = title;
@@ -628,8 +629,35 @@ taskSaveForm.addEventListener('submit', (e) => {
   const title = taskSaveTitle.value;
   const success = parseInt(taskSaveSuccessRange.value);
   const tags = taskSaveTagInputSuggestor.getTags();
-  alert('submittet');
+  const description = taskSaveReflection.value;
+  tasks[currTasks].title = title;
+  tasks[currTasks].success = success;
+  tasks[currTasks].tags = tags;
+  tasks[currTasks].description = description;
+  tasks[currTasks].endAt = Date.now().toISOString().slice(0, 10);
+  tasks[currTasks].extraTime -= tasks[currTasks].secondsLeft / 60;
+  updateLogs(tasks[currTasks]);
 });
+async function updateLogs(log){
+    try{
+        const logs = await readLogs();
+    logs.push(log);
+    const temp = {
+        logs : logs
+    }
+    const response = await ipcRenderer.invoke('update-log', temp);
+    if(response.success){
+      console.log('log has been updated sucessfully');
+    } else{
+      throw new Error(`Someting went wrong when trying to update logs. Err Message: ${response.message}`);
+    }
+    l(JSON.stringify(log));
+    location.reload();
+    } catch (err){
+        console.error(err.message);
+    }
+}
+
 
 function displayTaskSave() {
   updateSliderBackground(taskSaveSuccessRange);
@@ -729,8 +757,8 @@ function addTaskToTemplate(taskList = dummyTaskTemplate, containerId = "taskList
       renderTasks(taskList, containerId);
       console.log(`Rendered tasks in container: ${containerId}`);
       document.getElementById(`${containerId}-title`).value = "";
-      document.getElementById(`${containerId}-time}`).value = "";
-      document.getElementById(`${containerId}-tags`).value = "";
+      document.getElementById(`${containerId}-time`).value = "";
+      templateTagInputMap[containerId]?.updateTags([]);
     }
     // const tagInputContainerEdit = container.querySelectorAll('.settings-template-tags-container-edit');
     const tagInputContainerEditSuggestor = new TagInput(null, dummytagTree, [] );

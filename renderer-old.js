@@ -452,7 +452,7 @@ filterBtn.addEventListener('click', applyFilter);
 resetBtn.addEventListener('click', resetFilter);
 closeBtn.addEventListener('click',  vanishViewLogs);
 
-})
+});
 
 // dynamic qoute functionality 
 
