@@ -3,17 +3,15 @@ const path = require('path');
 const fs = require('fs');
 const fsp = require('fs/promises');
 const { spawn } = require('child_process');
-const { json } = require('stream/consumers');
-const { timeStamp } = require('console');
-const { subtle } = require('crypto');
 
+const l = (m) => console.log(m + ' ' + new Date().toISOString().slice(12, 19));
 function startWatchdog() {
   const appExe = process.execPath; // Path to the running .exe
 
   setInterval(() => {
     try {
       if (!mainWindow || mainWindow.isDestroyed()) {
-        console.log('Main window was destroyed. Restarting app...');
+        l('Main window was destroyed. Restarting app...');
         spawn(appExe, [], {
           detached: true,
           stdio: 'ignore'
@@ -28,27 +26,30 @@ function startWatchdog() {
 
 startWatchdog();
 
-const gotTheLock = app.requestSingleInstanceLock();
 
-if(!gotTheLock){
-  // if another instance is running quit this one
-    app.quit();
-} else {
-  app.on('second-instance',()=> {
-    if(mainWindow){
-      if(mainWindow.isMinimized()) mainWindow.restore();
-      if(!mainWindow.isVisible()) mainWindow.show();
-      mainWindow.setAlwaysOnTop(true);
-    } else {
-      mainWindow = createWindow();
-    }
-  })
-}
+// require in production to prevent multiple instances, in dev to allow multiple instances for easy testing
+// const gotTheLock = app.requestSingleInstanceLock();
+
+// if(!gotTheLock){
+//   // if another instance is running quit this one
+//     app.quit();
+// } else {
+//   app.on('second-instance',()=> {
+//     if(mainWindow){
+//       if(mainWindow.isMinimized()) mainWindow.restore();
+//       if(!mainWindow.isVisible()) mainWindow.show();
+//       mainWindow.setAlwaysOnTop(true);
+//     } else {
+//       mainWindow = createWindow();
+//     }
+//   })
+// }
 
 let mainWindow;
 let isSmall;
 
 function checkMainWindow(){
+  l('checkMainWindow() just triggered');
   if(!mainWindow || mainWindow.isDestroyed()){
     mainWindow = createWindow();
     bigSize()
@@ -57,13 +58,15 @@ function checkMainWindow(){
     if(isSmall){
       smallSize();
     } else{
-      //bigSize();
+      bigSize();
     }
-    mainWindow.setAlwaysOnTop(true);
   }
+    if(!mainWindow.isAlwaysOnTop()) mainWindow.setAlwaysOnTop(true);
 }
 
 function smallSize(){
+  l('smallSize() just triggered');
+  if(isSmall) return;
   mainWindow.setResizable(true);
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   mainWindow.setBounds({
@@ -76,6 +79,8 @@ function smallSize(){
   mainWindow.setResizable(false);
 }
 function bigSize(){
+  if(!mainWindow  || mainWindow.isFullScreen()) return;
+  l('bigSize() just triggered');
   mainWindow.setResizable(true);
   mainWindow.setFullScreen(true);
   mainWindow.setResizable(false);
@@ -120,7 +125,11 @@ if (!fs.existsSync(pathLog)) {
         extraAlocatedTime: 0,
         timestamp: new Date().toISOString() // Use current timestamp
       }
-    ]
+    ],
+    dailyTemplates : [],
+    todayTaskLists : [],
+    tomorrowTaskLists : []
+
   };
 
   fs.writeFileSync(pathLog, JSON.stringify(initialLog, null, 2)); // Pretty print with indentation
@@ -137,33 +146,32 @@ app.whenReady().then(() => {
   });
   
   mainWindow.on('minimize', (e) => {
+    l('minimize event triggered');
     e.preventDefault();
     mainWindow.hide();
     setTimeout(()=> {
       checkMainWindow();
-    }, 1000);
+    }, 150);
     // mainWindow.setAlwaysOnTop(true);
   });
   mainWindow.on('close', (e)=> {
+    l('close event triggered');
     e.preventDefault();
     mainWindow.hide();
     setTimeout(()=> {
       checkMainWindow();
     }, 1000);
   });
-  // mainWindow.on('blur', () => {
-  //   mainWindow.focus();
-  //   mainWindow.setAlwaysOnTop(true, 'screen-saver');
-  // });
   mainWindow.setAlwaysOnTop(true, 'screen-saver'); // or 'modal-panel'
   // mainWindow.setWindowButtonVisibility(false);
-  // mainWindow.on('blur', () => {
-  //   setTimeout(() => {
-  //     if (!mainWindow.isFocused()) {
-  //       mainWindow.focus();
-  //     }
-  //   }, 200);
-  // });
+  mainWindow.on('blur', () => {
+    l('blur event triggered');
+    setTimeout(() => {
+      if (!mainWindow.isFocused()) {
+        if(!mainWindow.isAlwaysOnTop()) mainWindow.setAlwaysOnTop(true, 'screen-saver');
+      }
+    }, 200);
+  });
 if (!app.isPackaged) {
   app.setName('Iron-Focus-v2-test');
 }
@@ -182,7 +190,7 @@ if (!app.isPackaged) {
   });
   
   mainWindow.on('hide', () => {
-    console.log('Window hidden, showing again...');
+    l('hide event triggered');
     setTimeout(() => {
       // if (!mainWindow.isVisible()) {
       //   mainWindow.show();
@@ -194,11 +202,20 @@ if (!app.isPackaged) {
     }, 500); // short delay to prevent rapid flickering
   });
 
-  setInterval(()=> {
-    checkMainWindow();
-  }, 60 * 1000);
-});
+//   setInterval(()=> {
+//     checkMainWindow();
+//   }, 60 * 1000);
 
+
+setInterval(() => {
+  if(!mainWindow || mainWindow.isDestroyed()){
+    checkMainWindow();
+  }
+  if(!mainWindow.isAlwaysOnTop()){
+      mainWindow.setAlwaysOnTop(true);
+  }
+}, 60 * 1000);
+});
 // Fullscreen toggle
 ipcMain.on('fullScreen', () => {
   bigSize();
@@ -280,7 +297,7 @@ ipcMain.on('drag-window', (event, x, y) => {
     mainWindow.setBounds({ x, y, width: mainWindow.getBounds().width, height: mainWindow.getBounds().height });
   }
 });
-ipcMain.on('get-window-position', (event) => {
+ipcMain.handle('get-window-position', (event) => {
   if (mainWindow) {
     const bounds = mainWindow.getBounds();
     return { x: bounds.x, y: bounds.y}

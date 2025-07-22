@@ -1,5 +1,6 @@
 const {ipcRenderer} = require('electron');
 // DOM
+const l = (m) => console.log(m);
 const settings = document.getElementById('task-settings');
 const taskStartTemplateContainer = document.getElementById('task-start-template-container');
 const taskStartTitle = document.getElementById('task-start-title');
@@ -50,7 +51,10 @@ const taskSaveSuccessDisplay = document.getElementById('task-save-success-displa
 const settingsTemplateTagsContainer = document.querySelector('.settings-template-tags-container');
 const todayTaskListTagsContainer = document.querySelector('.today-task-list-tags-container');
 const tomorrowTaskListTagsContainer = document.querySelector('.tomorrow-task-list-tags-container');
-
+const historyContainer = document.getElementById('history');
+const historyTab = document.getElementById('history-tab');
+const importLogFile = document.querySelector('.import-log-file');
+const exportLogBtn = document.querySelector('.export-log-btn');
 
 const timeUpMiniFallbackDuration = 3; // sec
 let timer = null;
@@ -58,6 +62,8 @@ let hovered = false;
 let timeUpMiniFallback;
 let currentSectionId = 'task-start';
 let perviousSectionId = null;
+let justSaved = false;
+// const logs = await readLogs();
 const tasks = {
   '1st': null,
   '2nd': null
@@ -305,7 +311,7 @@ let selectedIndex = -1;
     taskPausedTitle.textContent = tasks[currTasks].title;
     taskPausedTiming.innerHTML = `⏱ Elapsed: ${formatTime(tasks[currTasks].secondsPassed)}&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;⌛ Remaining: ${formatTime(tasks[currTasks].secondsLeft)}`;
 
-    taskPausedProgress.style.width = `${(tasks[currTasks].secondsPassed / (tasks[currTasks].time * 60 + tasks[currTasks].extraTime * 60)) * 100}%`;
+    taskPausedProgress.style.width = `${(tasks[currTasks].secondsPassed / (tasks[currTasks].givenTime * 60 + tasks[currTasks].extraAlocatedTime * 60)) * 100}%`;
     switchSection('task-paused');
   }
   function injectDataToTimeUps(){
@@ -345,6 +351,7 @@ let selectedIndex = -1;
       });
       console.log('the section id is ' + sectionId);
       console.log('the display is ' + display);
+      menuOverlay.style.display = 'none';
       // document.getElementById(sectionId).style.display = display;
       if(sectionId === 'task-show' || sectionId === 'task-time-up-mini') {
         gearIcon.classList.remove('show');
@@ -426,20 +433,21 @@ let selectedIndex = -1;
     return currTasks === '1st' ? '2nd' : '1st'; 
   }
   function updateTimer() {
+    if(!tasks[currTasks]) return;
     if(tasks[currTasks].secondsLeft > 0 && !tasks[currTasks].paused) {
       tasks[currTasks].secondsLeft--;
       tasks[currTasks].secondsPassed++; 
-      taskShowCountdown.textContent = hovered ? formatTime(tasks[currTasks].secondsPassed) : formatTime(tasks[currTasks].secondsLeft);
-      const percent = (tasks[currTasks].secondsPassed / (tasks[currTasks].time * 60 + tasks[currTasks].extraTime * 60)) * 100;
+      taskShowCountdown.textContent = hovered ? formatTime(tasks[currTasks]?.secondsPassed) : formatTime(tasks[currTasks]?.secondsLeft);
+      const percent = (tasks[currTasks].secondsPassed / (tasks[currTasks].givenTime * 60 + tasks[currTasks].extraAlocatedTime * 60)) * 100;
       taskShowProgress.style.width = `${percent}%`;
-    } else if(tasks[currTasks].paused){
+    } else if(tasks[currTasks] && tasks[currTasks]?.paused){
       // do nothing
     } else if(taskShow.classList.contains('visible')) {
         switchSection('task-time-up-mini');
         injectDataToTimeUps();
         if(timeUpMiniFallback) clearTimeout(timeUpMiniFallback);
         timeUpMiniFallback = setTimeout(() => {
-          tasks[currTasks].extraTime += timeUpMiniFallbackDuration;
+          tasks[currTasks].extraAlocatedTime += timeUpMiniFallbackDuration;
           switchSection('task-time-up');
         }, timeUpMiniFallbackDuration * 1000 * 60);
     } else {
@@ -472,13 +480,14 @@ let selectedIndex = -1;
     function setTask(currTasks) {
       tasks[currTasks] = {
         title : title,
-        time : time,
+        givenTime: time,
         secondsLeft : totalSeconds,
         secondsPassed : 0,
-        extraTime : 0, 
+        extraAlocatedTime : 0, 
         tags : tags,
         paused : false,
-        startAt : Date.now().toISOString().slice(0, 10)
+        startAt : new Date().toISOString().slice(0, 10),
+        timestamp : null
       }
       if(!timer) timer = setInterval(updateTimer, 1000);
       taskShowTitle.textContent = title;
@@ -505,7 +514,7 @@ menuBtnAbout.addEventListener('click', () => {
 
 taskShow.addEventListener('mouseenter', () => {
   hovered = true;
-  taskShowCountdown.textContent = formatTime(tasks[currTasks].secondsPassed);
+  if(taskShow.classList.contains('visible')) taskShowCountdown.textContent = formatTime(tasks[currTasks].secondsPassed);
 });
 document.body.addEventListener('mouseleave', () => {
   hovered = false;
@@ -611,7 +620,7 @@ function extendTime(min){
   if(timeUpMiniFallback) clearTimeout(timeUpMiniFallback);
   timeUpMiniFallback = null;
   tasks[currTasks].secondsLeft += min * 60;
-  tasks[currTasks].extraTime += min;
+  tasks[currTasks].extraAlocatedTime += min;
   if(!taskShow.classList.contains('visible')) {
     switchSection('task-show');
   }
@@ -626,6 +635,11 @@ function preFillSaveForm() {
 
 taskSaveForm.addEventListener('submit', (e) => {
   e.preventDefault();
+  if(justSaved) return;
+  justSaved = true;
+  setTimeout(()=> {
+    justSaved = false;
+  }, 30 * 1000);
   const title = taskSaveTitle.value;
   const success = parseInt(taskSaveSuccessRange.value);
   const tags = taskSaveTagInputSuggestor.getTags();
@@ -634,9 +648,13 @@ taskSaveForm.addEventListener('submit', (e) => {
   tasks[currTasks].success = success;
   tasks[currTasks].tags = tags;
   tasks[currTasks].description = description;
-  tasks[currTasks].endAt = Date.now().toISOString().slice(0, 10);
-  tasks[currTasks].extraTime -= tasks[currTasks].secondsLeft / 60;
+  tasks[currTasks].timestamp = new Date().toISOString();
+  tasks[currTasks].extraAlocatedTime -= Math.round(tasks[currTasks].secondsLeft / 60);
   updateLogs(tasks[currTasks]);
+  tasks[currTasks] = null;
+  currTasks = getAlternateTask();
+  taskShowTitle.textContent = tasks[currTasks]?.title || '';
+  switchSection(tasks[currTasks] ? 'task-show' : 'task-start');
 });
 async function updateLogs(log){
     try{
@@ -648,11 +666,12 @@ async function updateLogs(log){
     const response = await ipcRenderer.invoke('update-log', temp);
     if(response.success){
       console.log('log has been updated sucessfully');
+      
     } else{
       throw new Error(`Someting went wrong when trying to update logs. Err Message: ${response.message}`);
     }
     l(JSON.stringify(log));
-    location.reload();
+    // location.reload();
     } catch (err){
         console.error(err.message);
     }
@@ -712,15 +731,38 @@ makeWindowDraggable(document.querySelector('.drag'));
 
 
     function switchTab(button, tabId) {
-      document.querySelectorAll('.task-tab, .report-tab').forEach(tab => tab.style.display = 'none');
+      document.querySelectorAll('.task-tab, .report-tab, .template-tab').forEach(tab => tab.style.display = 'none');
       document.getElementById(tabId).style.display = 'block';
       document.querySelectorAll('.tab-nav button').forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
     }
 
-    function toggleTheme(theme) {
-      document.body.className = (theme === 'dark') ? 'dark' : '';
+    const selectTheme = document.getElementById('theme');
+    const theme = localStorage.getItem('theme');
+    if(theme === 'light') {
+        selectTheme.value = 'light';
+        toggleTheme(theme);
+    } else if(theme === 'dark'){
+        selectTheme.value = 'dark';
+        toggleTheme(theme);
+    } else {
+      selectTheme.value = 'default';
+      toggleTheme('');
     }
+    function toggleTheme(theme) {
+      if(theme === 'dark') {
+        document.body.className = "dark-mode";
+        localStorage.setItem('theme' , 'dark');
+      } else if(theme === 'light'){
+        document.body.className = "";
+        localStorage.setItem('theme', 'light');
+      } else {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.body.className = isDark ? 'dark-mode' : ''; 
+        localStorage.setItem('theme' , 'default');
+      }
+    }
+
     function closeSettings() {
               switchSection(perviousSectionId);
     }
@@ -1295,3 +1337,347 @@ const tomorrowTaskListTagInputSuggestor = new TagInput(
   dummytagTree,
   []
 );
+
+// history load logic
+showHistory();
+ async function showHistory() {
+  // const wasSmall = window.innerWidth < screen.width * 0.5;
+  // if(wasSmall){
+  //   fullScreen(true);
+  // }
+  l('log btn is clicked');
+
+  // const closeBtn = historyContainer.querySelector('.close-btn');
+  const minSuccess = historyContainer.querySelector('.minSuccess');
+  const maxSuccess = historyContainer.querySelector('.maxSuccess');
+  const minGivenTime = historyContainer.querySelector('.minGivenTime');
+  const maxGivenTime = historyContainer.querySelector('.maxGivenTime');
+  const minExtraTime = historyContainer.querySelector('.minExtraTime');
+  const maxExtraTime = historyContainer.querySelector('.maxExtraTime');
+  const startDate = historyContainer.querySelector('.startDate');
+  const endDate = historyContainer.querySelector('.endDate');
+
+  const filterBtn = historyContainer.querySelector('.filter')
+  const resetBtn = historyContainer.querySelector('.reset');
+
+  const logs = await readLogs();
+  l(JSON.stringify(logs));
+  renderLogs(logs);
+
+  l(JSON.stringify(logs));
+
+
+
+  function applyFilter(){
+    const filtered = logs.filter(log => {
+      const logDate = new Date(log.timestamp);
+
+      return (
+        (!minSuccess.value || minSuccess.value <= log.success) &&
+        (!maxSuccess.value || maxSuccess.value >= log.success) && 
+        (!minGivenTime.value || minGivenTime.value <= log.givenTime) &&
+        (!maxGivenTime.value || maxGivenTime.value >= log.givenTime) &&
+        (!minExtraTime.value || minExtraTime.value <= log.extraAlocatedTime) &&
+        (!maxExtraTime.value || maxExtraTime.value >= log.extraAlocatedTime) &&
+        (!startDate.valueAsDate || startDate.valueAsDate <= logDate) &&
+        (!endDate.valueAsDate || endDate.valueAsDate >= logDate)
+      );
+    });
+    renderLogs(filtered);
+  }
+
+  function resetFilter(){
+    historyContainer.querySelectorAll('.filter-container input').forEach(input => input.value = '');
+    renderLogs(logs);
+  }
+  // function vanishViewLogs(){
+  //   document.body.removeChild(historyContainer);
+  //   if(wasSmall){
+  //     fullScreen(false);
+  //   }
+  // }
+filterBtn.addEventListener('click', applyFilter);
+resetBtn.addEventListener('click', resetFilter);
+// closeBtn.addEventListener('click',  vanishViewLogs);
+
+}
+
+  function renderLogs(filteredLogs) {
+    // filteredLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    filteredLogs.sort((a,b)=> Date.parse(b.timestamp) - Date.parse(a.timestamp));
+    const tbody = historyContainer.querySelector('.logTableBody');
+    tbody.innerHTML = '';
+    filteredLogs.forEach((log, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${log.title}</td>
+        <td>${log.givenTime}</td>
+        <td>${log.extraAlocatedTime}</td>
+        <td>${log.success}</td>
+        <td>${log.description}</td>
+        <td  class="timestamp">${formateTimeStamp(log.timestamp)}</td>
+      `;
+      tbody.appendChild(row);
+      // l('I am here');
+      // l(`innerHTML of row is ${row.innerHTML}`);
+    });
+  }
+  async function mergeTwoLogs(log1, log2){
+    const merged = [];
+    const seen = new Set();
+    for(const log of log1){
+      if(!seen.has(log.timestamp)){
+        seen.add(log.timestamp);
+        merged.push(log);
+      }
+    }
+    
+    for(const log of log2) {
+      if(!seen.has(log.timestamp)){
+        seen.add(log.timestamp);
+        merged.push(log);
+      }
+    }
+    merged.sort((a,b) => Date.parse(b.timestamp) - Date.parse(a.timestamp));
+    return merged;
+  }
+  importLogFile.addEventListener('change', async function () {
+    const logs = await readLogs();
+    const file = this.files[0];
+    let data;
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = async function (e) {
+      let content = e.target.result;
+      try{
+        data = JSON.parse(content);
+      } catch(err){
+        showWarningMessage(`${err.message}`);
+      }
+      try{
+        if(data.logs){
+          const mergedLogs = await mergeTwoLogs(data.logs, logs );
+          l("merged Log :" + JSON.stringify(mergedLogs));
+          const response = await ipcRenderer.invoke('write-logs', mergedLogs);
+          if(response.success){
+            showWarningMessage("Logs have successfully Updated", "green", 2);
+          } else {
+            showWarningMessage("SWW when writting logs to file", undefined, 5);
+          }
+          renderLogs(mergedLogs);
+        } else {
+          throw new Error('imported file is corupted or Invalid');
+        }
+      }catch(err){
+        showWarningMessage(`${err.message}`,undefined, 5); 
+      }
+    }
+    reader.readAsText(file);
+    this.value = '';
+  });
+
+  exportLogBtn.addEventListener('click', async()=> {
+    const response = await ipcRenderer.invoke('export-logs');
+    if(response.success){
+      showWarningMessage('Logs Sucessfully Exported', 'green');
+    } else {
+      showWarningMessage(`SomeThing went wrong ${response.message}`);
+    }
+  });
+  
+
+async function readLogs(){
+    try {
+        const data = await ipcRenderer.invoke('load-logs');
+        if(data.success) {
+          return data.logs;
+        } else {
+          throw Error(`'Failed to load logs from main.js' , Err message : ${data.message}`);
+        }
+    } catch(err){
+        console.error('hey, something went wrong, ',err.message);
+        return null;
+    }
+} 
+function formateTimeStamp(iso){
+  const date = new Date(iso);
+  return date.toLocaleString('en-US',{
+    dateStyle : 'medium',
+    timeStyle : 'short'
+  });
+}
+
+function showWarningMessage(message, bg = '#f44336', timeInSec = 3) {
+  let container = document.querySelector(".warning-message-container");
+  if (!container) {
+      container = document.createElement("div");
+      container.className = "warning-message-container";
+      container.style.position = "fixed";
+      container.style.top = "10px";
+      container.style.right = "15px";
+      container.style.paddingLeft = "15px";
+      container.style.zIndex = "9999";
+      container.style.display = "flex";
+      container.style.flexDirection = "column";
+      container.style.gap = "5px";
+      document.body.appendChild(container);
+  }
+
+  const warning = document.createElement("div");
+  warning.className = "warning-message";
+  warning.textContent = message;
+  warning.style.background = bg; // red
+  warning.style.color = "#fff";
+  warning.style.padding = "4px 8px";
+  warning.style.borderRadius = "8px";
+  warning.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+  warning.style.fontFamily = "sans-serif";
+  warning.style.transition = "opacity 0.3s";
+  warning.style.fontSize = '13px';
+  warning.style.opacity = "1";
+
+  console.warn("Warn:", message);
+  container.appendChild(warning);
+
+  setTimeout(() => {
+      warning.style.opacity = "0";
+      setTimeout(() => {
+          warning.remove();
+      }, 300);
+  }, 1000 * timeInSec);
+}
+
+historyTab.addEventListener('click', () => {
+  showHistory();
+})
+
+
+// calendar view
+
+const now = new Date();
+let year = now.getFullYear();
+let month = now.getMonth() + 1;
+
+
+        const checkins = {
+      "2025-06-20": [{ id: "watchP", answer: "Yes" }, { id: "didM", answer: "No" }],
+      "2025-06-21": [{ id: "watchP", answer: "Yes" }, { id: "didM", answer: "Yes" }],
+      "2025-06-22": [{ id: "watchP", answer: "No" }, { id: "didM", answer: "Yes" }],
+      "2025-06-23": [{ id: "watchP", answer: "No" }, { id: "didM", answer: "No" }],
+      "2025-06-24": []
+    };
+
+   function getDayColor(entryArray) {
+      let didM = null;
+      let didP = null;
+
+      for (const item of entryArray) {
+        if (item.id === "didM") didM = item.answer.toLowerCase();
+        if (item.id === "watchP") didP = item.answer.toLowerCase();
+      }
+
+      if (didM === "yes" && didP === "yes") return "dot-red";
+      if (didM === "yes") return "dot-orange";
+      if (didP === "yes") return "dot-purple";
+      if (didM === "no" && didP === "no") return "dot-green";
+      return "dot-gray";
+    }
+       function generateCalendar(year, month) {
+  const calendar = document.getElementById('calendar');
+  calendar.innerHTML = ''; // clear previous
+
+  const startDate = new Date(year, month - 1, 1); // month is 0-based
+  const startDay = startDate.getDay();
+
+  const daysInMonth = new Date(year, month, 0).getDate();
+
+  for (let i = 0; i < startDay; i++) {
+    const empty = document.createElement('div');
+    calendar.appendChild(empty);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const dayDiv = document.createElement('div');
+    const colorClass = getDayColor(checkins[dateStr] || []);
+    dayDiv.className = `day ${colorClass}`;
+    dayDiv.textContent = day;
+    calendar.appendChild(dayDiv);
+  }
+
+function getMonthLabel(year, month) {
+  const date = new Date(year, month - 1); // month is 0-indexed
+  return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+}
+document.querySelector('.month-label').innerText = getMonthLabel(year, month);
+l(`getMonthLabel is ${getMonthLabel(year, month)}`);
+
+function getMonthLabel(year, month) {
+  const date = new Date(year, month - 1); // month is 0-indexed
+  return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+}
+document.querySelector('.month-label').innerText = getMonthLabel(year, month);
+l(`getMonthLabel is ${getMonthLabel(year, month)}`);
+}
+
+
+document.getElementById('nextMonth').addEventListener('click', ()=> {
+    if(month >= 12){
+        month = 1; year++;
+    } else {
+        month++;
+    }
+    generateCalendar(year, month);
+});
+document.getElementById('prevMonth').addEventListener('click', ()=> {
+    if(month <= 1){
+        month = 12 ; year--;
+    } else {
+        month--;
+    }
+    generateCalendar(year, month);
+});
+generateCalendar(year, month);
+
+// dynamic  qoutes
+const readQoutes = async() => {
+  try{
+    const response = await ipcRenderer.invoke('load-qoutes');
+    if(response.success){
+      return response.qoutes;
+    }else{
+      throw new Error(`'SWW Err M: ${response.message}`);
+    }
+  } catch(err){
+    return [`${err.message}`];
+  }
+}
+const popFromQoutes = (qoutes) => {
+  const index = Math.floor(Math.random() * qoutes.length);
+  const qoute = qoutes[index];
+  qoutes.splice(index, 1);
+  return qoute;
+} 
+(async ()=> {
+  let qoutes = await readQoutes() || [];  
+
+  const intervalForQoutes = setInterval(async()=> {
+    if(qoutes.length == 0){
+      qoutes = await readQoutes() || [];
+      
+    } 
+    if(qoutes.length > 0){
+      // taskShowQuote.style.opacity = 0;
+      // setTimeout(()=> {
+      //   const qoute = popFromQoutes(qoutes);
+      //   taskShowQuote.innerHTML = qoute;
+      //   taskShowQuote.style.opacity = 1;
+      // }, 300);
+        const qoute = popFromQoutes(qoutes);
+        taskShowQuote.innerHTML = qoute;
+    } else {
+      taskShowQuote.innerHTML = 'Time & Tide wait for none, not even for Error 😎';
+    }
+  }, 10000);
+})();

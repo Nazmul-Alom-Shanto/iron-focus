@@ -7,13 +7,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Iron Focus</title>
 	<link rel="stylesheet" href="./assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="./renderer.js" defer></script>
 </head>
 
 <body class="dark-mde">
-    <div id="suggestions" class="suggestion-box" style="display: none;"></div>
+	<div id="suggestions" class="suggestion-box" style="display: none;"></div>
 
 	<svg id="gear-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 		<path
@@ -60,7 +60,7 @@
 					<div class="form-group">
 						<label for="task-start-tags">Tags </label>
 						<div class="start-task-tags tag-input-container">
-						<!-- <input type="text" id="task-start-tags" placeholder="e.g., study, math" /> -->
+							<!-- <input type="text" id="task-start-tags" placeholder="e.g., study, math" /> -->
 						</div>
 					</div>
 					<div class="form-group">
@@ -155,7 +155,7 @@
 				<div class="form-group">
 					<label for="task-save-tags">🏷️ Tags</label>
 					<!-- <input type="text" id="task-save-tags" name="tags" placeholder="e.g., math, revision" /> -->
-						<div class="task-save-tags-container tag-input-container"></div>
+					<div class="task-save-tags-container tag-input-container"></div>
 					<div class="tag-hint">Use commas. Suggestions soon.</div>
 				</div>
 
@@ -187,7 +187,7 @@
 			<button class="back-button" onclick="closeSettings()">← Back</button>
 			<button class="active" onclick="switchSettingsSection(this, 'general-settings')">General Settings</button>
 			<button onclick="switchSettingsSection(this, 'timer-settings')">Timer Settings</button>
-			<button onclick="switchSettingsSection(this, 'template')">Daily Template</button>
+			<button onclick="switchSettingsSection(this, 'template')">Templates</button>
 			<button onclick="switchSettingsSection(this, 'my-tasks')">My Tasks</button>
 			<button onclick="switchSettingsSection(this, 'reports')">Reports</button>
 			<button onclick="switchSettingsSection(this, 'import-export')">Export & Import</button>
@@ -199,9 +199,10 @@
 			<div class="settings-section card" id='general-settings'>
 				<h2>General Settings</h2>
 				<label>Theme:
-					<select onchange="toggleTheme(this.value)">
+					<select id="theme" onchange="toggleTheme(this.value)">
 						<option value="light">Light</option>
 						<option value="dark">Dark</option>
+						<option value="default">System</option>
 					</select>
 				</label>
 			</div>
@@ -211,18 +212,31 @@
 			</div>
 
 			<div class="settings-section card" style="display: none;" id='template'>
-				<h2>Daily Template</h2>
-				<div class="task-creator">
-					<div class="inputs">
-						<input type="text" id="taskList-title" placeholder="Task Title">
-						<input type="number" id="taskList-time" value="25" placeholder="Time (min)" min="0">
-					</div>
-					<div class="tag-and-btn">
-						<div class="settings-template-tags-container tag-input-container"></div>
-						<button onclick="addTaskToTemplate()">Add Task</button>
-					</div>
+				<div class="tab-nav">
+					<button class="active" onclick="switchTab(this, 'template-daily')">Daily Template</button>
+					<button onclick="switchTab(this, 'template-weekly')">Weekly Template</button>
+					<button onclick="switchTab(this, 'template-monthly')">Monthly Template</button>
 				</div>
-				<div class="task-list" id="taskList"></div>
+				<!-- <h2>Daily Template</h2> -->
+				<div id="template-daily" class="template-tab">
+					<div class="task-creator">
+						<div class="inputs">
+							<input type="text" id="taskList-title" placeholder="Task Title">
+							<input type="number" id="taskList-time" value="25" placeholder="Time (min)" min="0">
+						</div>
+						<div class="tag-and-btn">
+							<div class="settings-template-tags-container tag-input-container"></div>
+							<button onclick="addTaskToTemplate()">Add Task</button>
+						</div>
+					</div>
+					<div class="task-list" id="taskList"></div>
+				</div>
+				<div id="template-weekly">
+					<p>Weekly Template coming soon</p>
+				</div>
+				<div id="template-monthly">
+					<p>Monthly Template coming soon</p>
+				</div>
 			</div>
 
 			<div class="settings-section card" style="display: none;" id='my-tasks'>
@@ -263,11 +277,39 @@
 			</div>
 			<div class="settings-section card" style="display: none;" id='reports'>
 				<div class="tab-nav">
-					<button class="active" onclick="switchTab(this, 'history')">History</button>
+					<button class="active" id="history-tab" onclick="switchTab(this, 'history')">History</button>
 					<button onclick="switchTab(this, 'pie-chart')">Tag Analysis</button>
+					<button onclick="switchTab(this, 'calendar-view')">Calender View</button>
 				</div>
-				<div id="history" class="report-tab">
-					<p>(Demo: Table of completed tasks)</p>
+				<div id="history" class="report-tab view-logs-overlay">
+					<div class="filter-container">
+						<input type="number" class="minSuccess" placeholder="Min Success %">
+						<input type="number" class="maxSuccess" placeholder="Max Success %">
+						<input type="number" class="minGivenTime" placeholder="Min Given Time">
+						<input type="number" class="maxGivenTime" placeholder="Max Given Time">
+						<input type="number" class="minExtraTime" placeholder="Min Extra Time">
+						<input type="number" class="maxExtraTime" placeholder="Max Extra Time">
+						<input type="date" class="startDate">
+						<input type="date" class="endDate">
+						<button type="button" class='filter'>Filter</button>
+						<button type="button" class='reset'>Reset</button>
+						
+					</div>
+
+					<table>
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Title</th>
+								<th>Given Time</th>
+								<th>Extra Time</th>
+								<th>Success %</th>
+								<th>Description</th>
+								<th>Timestamp</th>
+							</tr>
+						</thead>
+						<tbody class="logTableBody"></tbody>
+					</table>
 				</div>
 				<div id="pie-chart" class="report-tab pie-chart" style="display:none">
 					<div class="dashboard-container">
@@ -278,13 +320,42 @@
 						</div>
 						<div class="tag-summary-container"></div>
 					</div>
-					</div>
-			</div>
-			<div class="settings-section card" style="display: none;" id='import-export'>
-				<h2>Export & Import</h2>
-				<p>Export your settings or restore from a backup.</p>
-			</div>
+				</div>
 
+				<div id="calendar-view" class="report-tab" style="display:none">
+					<div class="calendar-header">
+						<button id="prevMonth" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+						<div class="month-label" id="monthLabel"></div>
+						<button id="nextMonth" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+					</div>
+					<div class="calendar-legend">
+						<div class="legend-item"><span class="legend-dot dot-red"></span>below 40% </div>
+						<div class="legend-item"><span class="legend-dot dot-orange"></span> 40% to 60% </div>
+						<div class="legend-item"><span class="legend-dot dot-purple"></span> 60% to 80%</div>
+						<div class="legend-item"><span class="legend-dot dot-green"></span> 80% to 100%</div>
+						<div class="legend-item"><span class="legend-dot dot-gray"></span> No Data</div>
+					</div>
+					<div class="calendar-wrapper">
+						<div class="weekdays">
+							<div>Sun</div>
+							<div>Mon</div>
+							<div>Tue</div>
+							<div>Wed</div>
+							<div>Thu</div>
+							<div>Fri</div>
+							<div>Sat</div>
+						</div>
+						<div class="calendar" id="calendar"></div>
+					</div>
+				</div>
+			</div>
+			<div class="settings-section card" style="display: none;" id="import-export">
+				<h2>Export & Import</h2>
+			    <p class="description">You can export your task history as a backup or import logs from a previous session.</p>
+				<label for="import-log-file" class="import-log-btn">📥 Import JSON</label>
+				<input type="file" id="import-log-file" class="import-log-file" accept=".json">
+				<input type="button" value="📤 Export Logs" class="export-log-btn">
+			</div>
 			<div class="settings-section card" style="display: none;" id='about'>
 				<h1>About</h1>
 				<h2>About IronFocus</h2>
