@@ -8,8 +8,20 @@
 	<title>Iron Focus</title>
 	<link rel="stylesheet" href="./assets/css/style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<script src="./assets/js/init.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="./assets/js/common-function.js" defer></script>
+	<script src="./assets/js/tag-input-suggation.js" defer></script>
 	<script src="./renderer.js" defer></script>
+	<script src="./assets/js/pie-chart.js" defer></script>
+	<script src="./assets/js/history-tab.js" defer></script>
+	<script src="./assets/js/calender-view-tab.js" defer></script>
+	<script src="./assets/js/custom-drag.js" defer></script>
+	<script src="./assets/js/dynamic-qoute.js" defer></script>
+	<script src="./assets/js/export-import.js" defer></script>
+	<script src="./assets/js/settings-tamplate.js" defer></script>
+	
+
 </head>
 
 <body class="dark-mde">
@@ -74,7 +86,8 @@
 			</div>
 			<!--right task pre defined view-->
 			<div class="card" id="task-start-template">
-				<h2>📋 Your Daily Tasks</h2>
+				<!-- <h2>📋 Your Daily Tasks<span></span></h2> -->
+				<h2 class="daily-tasheading">📋 Your Daily Tasks<span id="task-count">4/6</span></h2>
 				<div class="templates" id="task-start-template-container">
 					<!-- Template buttons will be dynamically added here -->
 				</div>
@@ -214,8 +227,8 @@
 			<div class="settings-section card" style="display: none;" id='template'>
 				<div class="tab-nav">
 					<button class="active" onclick="switchTab(this, 'template-daily')">Daily Template</button>
-					<button onclick="switchTab(this, 'template-weekly')">Weekly Template</button>
-					<button onclick="switchTab(this, 'template-monthly')">Monthly Template</button>
+					<!-- <button onclick="switchTab(this, 'template-weekly')">Weekly Template</button> -->
+					<!-- <button onclick="switchTab(this, 'template-monthly')">Monthly Template</button> -->
 				</div>
 				<!-- <h2>Daily Template</h2> -->
 				<div id="template-daily" class="template-tab">
@@ -226,15 +239,15 @@
 						</div>
 						<div class="tag-and-btn">
 							<div class="settings-template-tags-container tag-input-container"></div>
-							<button onclick="addTaskToTemplate()">Add Task</button>
+							<button id="template-daily-add-task-btn">Add Task</button>
 						</div>
 					</div>
 					<div class="task-list" id="taskList"></div>
 				</div>
-				<div id="template-weekly">
+				<div id="template-weekly" class="template-tab" style="display: none;">
 					<p>Weekly Template coming soon</p>
 				</div>
-				<div id="template-monthly">
+				<div id="template-monthly" class="template-tab"  style="display: none">
 					<p>Monthly Template coming soon</p>
 				</div>
 			</div>
@@ -254,7 +267,7 @@
 						</div>
 						<div class="tag-and-btn">
 							<div class="today-task-list-tags-container tag-input-container"></div>
-							<button onclick="addTaskToTemplate( undefined, 'todayTaskList')">Add Task</button>
+							<button id="todayTaskList-add-task-btn">Add Task</button>
 						</div>
 					</div>
 					<div class="task-list" id="todayTaskList"></div>
@@ -267,7 +280,7 @@
 						</div>
 						<div class="tag-and-btn">
 							<div class="tomorrow-task-list-tags-container tag-input-container"></div>
-							<button onclick="addTaskToTemplate( undefined, 'tomorrowTaskList')">Add Task</button>
+							<button id="tomorrowTaskList-add-task-btn">Add Task</button>
 						</div>
 					</div>
 					<div class="task-list" id="tomorrowTaskList"></div>
@@ -296,7 +309,8 @@
 						
 					</div>
 
-					<table>
+					<div class="log-view-table">
+						<table>
 						<thead>
 							<tr>
 								<th>#</th>
@@ -310,9 +324,24 @@
 						</thead>
 						<tbody class="logTableBody"></tbody>
 					</table>
+					</div>
 				</div>
 				<div id="pie-chart" class="report-tab pie-chart" style="display:none">
+					<!-- <div class="filter-container">
+						<input type="number" class="minSuccess" placeholder="Min Success %">
+						<input type="number" class="maxSuccess" placeholder="Max Success %">
+						<input type="number" class="minGivenTime" placeholder="Min Given Time">
+						<input type="number" class="maxGivenTime" placeholder="Max Given Time">
+						<input type="number" class="minExtraTime" placeholder="Min Extra Time">
+						<input type="number" class="maxExtraTime" placeholder="Max Extra Time">
+						<input type="date" class="startDate">
+						<input type="date" class="endDate">
+						<button type="button" class='filter'>Filter</button>
+						<button type="button" class='reset'>Reset</button>
+						
+					</div> -->
 					<div class="dashboard-container">
+						
 						<div class="warper">
 							<h2 class="center-label" id="chartTitle">Total Time</h2>
 							<canvas id="tagChart" width="400" height="400"></canvas>
@@ -357,9 +386,8 @@
 				<input type="button" value="📤 Export Logs" class="export-log-btn">
 			</div>
 			<div class="settings-section card" style="display: none;" id='about'>
-				<h1>About</h1>
 				<h2>About IronFocus</h2>
-				<p>Version 1.0. Built by Shanto with focus and purpose.</p>
+				<p>Version 2.0. Built by Nazmul Alom Shanto with Focus and Purpose.</p>
 			</div>
 		</div>
 

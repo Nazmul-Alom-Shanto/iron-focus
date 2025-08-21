@@ -114,6 +114,8 @@ function createWindow(){
 
 const pathLog = path.join(app.getPath('userData'), 'logs.json');
 const pathQoute = path.join(app.getAppPath(), 'qoute.json');
+const pathTemplate = path.join(app.getPath('userData'),'template.json');
+const pathDailyTasks = path.join(app.getPath('userData'), 'daily-tasks.json');
 if (!fs.existsSync(pathLog)) {
   const initialLog = {
     logs: [
@@ -125,14 +127,62 @@ if (!fs.existsSync(pathLog)) {
         extraAlocatedTime: 0,
         timestamp: new Date().toISOString() // Use current timestamp
       }
-    ],
-    dailyTemplates : [],
-    todayTaskLists : [],
-    tomorrowTaskLists : []
+    ]
+    // ,dailyTemplates : [],
+    // todayTaskLists : [],
+    // tomorrowTaskLists : []
 
   };
 
   fs.writeFileSync(pathLog, JSON.stringify(initialLog, null, 2)); // Pretty print with indentation
+}
+
+if(!fs.existsSync(pathTemplate)) {
+  const initTemplate = {
+    "dailyTemplate" : [
+       {
+    title: 'Solve 2 Math Problems',
+    time: 30,
+    tags : ['study', 'math'],
+    editing: false
+  }
+    ],
+    "weeklyTemplate" : [
+
+    ]
+  }
+  fs.writeFileSync(pathTemplate, JSON.stringify(initTemplate, null, 2));
+}
+if(!fs.existsSync(pathDailyTasks)){
+  const today = new Date().toISOString().slice(0,10);
+  const initDailyTasks = {};
+  initDailyTasks[today] = [
+  {
+    title: 'Solve 2 Math Problems',
+    time: 30,
+    tags : ['study', 'math'],
+    editing: false
+  },
+  {
+    title: 'Revise Biology Diagrams',
+    time: 25,
+    tags : ['study', 'biology'],
+    editing: false
+  },
+  {
+    title: 'Work on IronFocus UI',
+    time: 45,
+    tags : ['work', 'ui'],
+    editing: false
+  },
+  {
+    title: 'Quran Hifz Revision',
+    time: 35,
+    tags : ['study', 'quran'],
+    editing: false
+  }
+] 
+fs.writeFileSync(pathDailyTasks, JSON.stringify(initDailyTasks, null, 2));
 }
 app.whenReady().then(() => {
   mainWindow = createWindow();
@@ -238,6 +288,26 @@ const writeLogsToFile = async (logs)=> {
     return {success : false, message : err.message};
   }
 }
+
+const readFromFile = async(path)=> {
+  try {
+    const data = await fsp.readFile(path, 'utf-8');
+    const parsed = JSON.parse(data);
+    return {success : true, data : parsed , rawData : data};
+  
+  } catch(err){
+    return {success : false, message : err.message};
+  }
+} 
+
+const writeToFile = async(path, content) => {
+     try{
+    await fsp.writeFile(path ,JSON.stringify(content, null , 2));
+    return {success : true}
+  } catch(err){
+    return {success : false, message : err.message};
+  }
+}
 ipcMain.handle('load-logs', async()=> {
   return await loadLogsFromFile();
 });
@@ -288,7 +358,20 @@ ipcMain.handle('write-logs', async(_, logs)=> {
   } catch(err){
     return {success : false, message : err.message};
   }
-})
+});
+ipcMain.handle('load-templates', async() => {
+  return await readFromFile(pathTemplate);
+});
+ipcMain.handle('write-templates', async(event, templates) => {
+  return await writeToFile(pathTemplate,templates);
+});
+
+ipcMain.handle('load-daily-tasks', async()=> {
+  return await readFromFile(pathDailyTasks);
+});
+ipcMain.handle('write-daily-tasks', async(_, tasks) => {
+  return writeToFile(pathDailyTasks, tasks);
+});
 ipcMain.on('exitFullScreen', () => {
   smallSize();
 });
@@ -302,6 +385,9 @@ ipcMain.handle('get-window-position', (event) => {
     const bounds = mainWindow.getBounds();
     return { x: bounds.x, y: bounds.y}
   }});
+ipcMain.on('quit',()=> {
+  app.quit();
+});
 
 app.on('window-all-closed', (e) => {
   e.preventDefault();  
