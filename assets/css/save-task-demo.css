@@ -1,0 +1,94 @@
+:root {
+    --accent: #0077ff;
+    --bg: #f0f2f5;
+    --text: #1e1e1e;
+    --muted: #666;
+    --border: #ccc;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .form-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 3rem 3.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 90vw;
+    height: 90vh;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .form-card:hover {
+    box-shadow: 0 14px 40px rgba(0,0,0,0.1);
+  }
+
+  .form-group {
+    margin-bottom: 2rem;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 1.05rem;
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 1.05rem;
+    outline-color: var(--accent);
+    background: #fff;
+  }
+
+  input[type="range"] {
+    width: 100%;
+  }
+
+  .success-value {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .tag-hint {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+  }
+
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.85rem 1.8rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  button:hover {
+    background: #0063cc;
+  }

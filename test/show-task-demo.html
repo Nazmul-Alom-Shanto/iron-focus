@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IronFocus Tracker</title>
+  <style>
+    :root {
+      --accent1: #6C63FF;
+      --accent2: #48C9B0;
+      --bg: linear-gradient(135deg, #fdfbfb, #ebedee);
+      --text: #1e1e2f;
+      --muted: #555;
+      --bar-color: #6C63FF;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      width: 250px;
+      height: 133px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 0.8rem 1rem;
+      color: var(--text);
+    }
+    html {
+      background: #fff;
+    }
+    .title {
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .quote {
+      font-size: 0.82rem;
+      font-style: italic;
+      color: var(--muted);
+      text-align: center;
+      transition: opacity 0.5s ease;
+      height: 1.3rem;
+      overflow: hidden;
+    }
+
+    .time {
+      font-size: 1.4rem;
+      text-align: center;
+      margin-top: 0.2rem;
+      cursor: default;
+      position: relative;
+    }
+
+    .time:hover::after {
+      content: attr(data-spent);
+      position: absolute;
+      top: -1.6rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
+      color: #333;
+      white-space: nowrap;
+      z-index: 10;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .progress-container {
+      height: 5px;
+      width: 100%;
+      background: #ddd;
+      border-radius: 3px;
+      margin-top: 0.6rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, var(--accent1), var(--accent2));
+      transition: width 1s linear;
+    }
+  </style>
+</head>
+<body>
+  <div class="title" id="task-title">📝 Revise Physics Ch 4</div>
+  <div class="quote" id="quote">Discipline > Motivation</div>
+  <div class="time" id="timer" data-spent="Spent: 0m 0s">⏳ 25:00</div>
+  <div class="progress-container">
+    <div class="progress-bar" id="progress"></div>
+  </div>
+
+  <script>
+    const totalTime = 25 * 60; // in seconds (25 mins)
+    let remaining = totalTime;
+    let spent = 0;
+
+    const timerEl = document.getElementById('timer');
+    const quoteEl = document.getElementById('quote');
+    const progressEl = document.getElementById('progress');
+    const titleEl = document.getElementById('task-title');
+
+    const quotes = [
+      "Discipline > Motivation",
+      "You’re doing better than you think",
+      "Focus is your superpower",
+      "Almost there, keep going!",
+      "Progress, not perfection"
+    ];
+
+    let quoteIndex = 0;
+    setInterval(() => {
+      quoteIndex = (quoteIndex + 1) % quotes.length;
+      quoteEl.style.opacity = 0;
+      setTimeout(() => {
+        quoteEl.textContent = quotes[quoteIndex];
+        quoteEl.style.opacity = 1;
+      }, 300);
+    }, 10000); // every 10s
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function update() {
+      if (remaining > 0) {
+        remaining--;
+        spent++;
+        timerEl.textContent = `⏳ ${formatTime(remaining)}`;
+        timerEl.setAttribute('data-spent', `Spent: ${Math.floor(spent/60)}m ${spent%60}s`);
+
+        const progress = (spent / totalTime) * 100;
+        progressEl.style.width = `${Math.min(progress, 100)}%`;
+      } else {
+        timerEl.textContent = "✅ Done!";
+        timerEl.setAttribute('data-spent', `Total: ${Math.floor(spent/60)}m ${spent%60}s`);
+      }
+    }
+
+    setInterval(update, 1000);
+
+    titleEl.addEventListener("click", () => {
+      alert("🔄 Open full task dashboard here (hook IPC later)");
+      // ipcRenderer.send("open-task-dash");
+    });
+  </script>
+</body>
+</html>

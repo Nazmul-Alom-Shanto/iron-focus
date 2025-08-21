@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>IronFocus Mini Time Up</title>
+<style>
+  :root {
+    --accent1: #6C63FF;
+    --accent2: #48C9B0;
+    --bg-gradient: linear-gradient(135deg, #f0f4ff, #d6e9fb);
+    --text-color: #1e1e2f;
+    --button-bg1: #6C63FF;
+    --button-bg2: #48C9B0;
+    --button-hover1: #5a53d9;
+    --button-hover2: #3fa890;
+    --finish-bg: #ff6b6b;
+    --finish-hover: #e15555;
+  }
+
+@media (prefers-color-scheme: dark){
+  :root {
+    --bg-gradient: linear-gradient(135deg, #1e2a38, #2c3e50);
+    --title: #f0f0f0;
+    --icon-fill: #ffffff;
+    --text-color: #f1f2f6;
+    --overlay-bg: rgba(30, 30, 47, 0.98);
+    --accent1: #6C63FF; 
+    --accent2: #48C9B0;
+    --highlight: #ffbe76;
+    --progress-bg: #3b4c65;
+    --progress-fill: #6C63FF;
+    --countdown-hover-bg: #2a3b5f;
+    --black: #ffffff; /* inverted */
+    --overlay-option-bg : #2a2f40;
+    --overlay-option-hover-bg : #1a233a;
+  }
+}
+
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body, html {
+    margin: 0; padding: 0; width: 250px; height: 140px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    background-repeat: no-repeat;
+    /*margin: auto;*/
+    border-radius: 16px;
+  }
+  html {
+    background: #000;
+  }
+
+  body {
+
+  }
+  h1 {
+    position: relative; top: 0px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 0.6rem;
+    color: var(--accent1);
+    /*margin-bottom: 0.2rem;*/
+    letter-spacing: 0.04em;
+
+  }
+
+  .task-title {
+    font-size: 1rem;
+    font-weight: 600;
+    /*margin-bottom: 0.15rem;*/
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .task-title::before {
+    content: "📝";
+    font-size: 1.2rem;
+  }
+
+  .time-spent {
+    font-size: 0.9rem;
+    color: var(--accent2);
+    font-weight: 500;
+    margin-bottom: 0.7rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  button {
+    flex: 1;
+    border: none;
+    padding: 0.35rem 0;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: background-color 0.2s ease;
+    user-select: none;
+  }
+  #extend-10 {
+    background: var(--button-bg1);
+  }
+  #extend-10:hover {
+    background: var(--button-hover1);
+  }
+  #extend-20 {
+    background: var(--button-bg2);
+  }
+  #extend-20:hover {
+    background: var(--button-hover2);
+  }
+  #finish-task {
+    background: var(--finish-bg);
+  }
+  #finish-task:hover {
+    background: var(--finish-hover);
+  }
+</style>
+</head>
+<body>
+  <h1>TIME IS UP!</h1>
+  <div class="task-title">Revise Physics Ch 4</div>
+  <div class="time-spent">⏳ 27:32</div>
+  <div class="actions" role="group" aria-label="Time extension and finish actions">
+    <button id="extend-10" type="button" aria-label="Extend time by 10 minutes">+10m</button>
+    <button id="extend-20" type="button" aria-label="Extend time by 20 minutes">+20m</button>
+    <button id="finish-task" type="button" aria-label="Finish task">Finish</button>
+  </div>
+
+  <script>
+    const extend10Btn = document.getElementById('extend-10');
+    const extend20Btn = document.getElementById('extend-20');
+    const finishBtn = document.getElementById('finish-task');
+
+    function extendTime(minutes) {
+      alert(`⏳ Extended time by ${minutes} minutes!`);
+      // Hook your backend or IPC here
+    }
+    function finishTask() {
+      alert('✅ Task finished!');
+      // Hook your backend or IPC here
+    }
+
+    extend10Btn.addEventListener('click', () => extendTime(10));
+    extend20Btn.addEventListener('click', () => extendTime(20));
+    finishBtn.addEventListener('click', finishTask);
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.isContentEditable) return;
+      if (e.key === 'Enter') finishTask();
+      if (e.key === '1') extendTime(10);
+      if (e.key === '2') extendTime(20);
+    });
+  </script>
+</body>
+</html>

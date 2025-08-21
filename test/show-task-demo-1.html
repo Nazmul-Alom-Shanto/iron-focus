@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IronFocus - Task Mini View</title>
+  <style>
+    :root {
+      --accent1: #6C63FF;
+      --accent2: #48C9B0;
+      --highlight: #FFB366;
+      --text-color: #222;
+      --bg-color: #f0f4ff;
+      --border-color: #d3d3f3;
+      --header-gradient: linear-gradient(to right, #6C63FF, #48C9B0);
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 250px;
+      height: 133px;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-color);
+    }
+
+    .task-mini {
+      width: 240px;
+      height: 125px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .task-header {
+      background: var(--header-gradient);
+      color: white;
+      padding: 6px 12px;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .quote {
+      font-style: italic;
+      font-size: 12px;
+      color: var(--highlight);
+      text-align: center;
+      padding: 6px 10px;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .countdown {
+      font-size: 22px;
+      font-weight: bold;
+      background: #ffffff;
+      border-top: 1px solid #eee;
+      color: var(--accent2);
+      font-family: 'Courier New', Courier, monospace;
+      text-align: center;
+      padding: 6px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="task-mini">
+    <div class="task-header">🧪 Chemistry CH-5</div>
+    <div class="quote">“Stay on target. Stay sharp.”</div>
+    <div class="countdown">01:52:33</div>
+  </div>
+</body>
+</html>

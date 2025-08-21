@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IronFocus Settings UI</title>
+  <style>
+    :root {
+      --accent1: #6C63FF;
+      --accent2: #48C9B0;
+      --bg-light: #f0f4ff;
+      --bg-dark: #1e1e2f;
+      --card-light: #ffffff;
+      --card-dark: #2e2e3e;
+      --text-light: #222;
+      --text-dark: #eee;
+      --highlight: #FFB366;
+      --transition: 0.3s ease-in-out;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      height: 100vh;
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: var(--transition);
+    }
+
+    .dark body {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .sidebar {
+      width: 220px;
+      background: var(--accent1);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 0.5rem;
+      box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background var(--transition);
+    }
+
+    .sidebar button:hover,
+    .sidebar button.active {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .content {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+      background: var(--bg-light);
+      transition: var(--transition);
+    }
+
+    .dark .content {
+      background: var(--bg-dark);
+    }
+
+    .card {
+      background: var(--card-light);
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      transition: var(--transition);
+    }
+
+    .dark .card {
+      background: var(--card-dark);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: var(--accent1);
+    }
+
+    .tab-nav {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-nav button {
+      background: var(--accent2);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background var(--transition);
+    }
+
+    .tab-nav button.active {
+      background: #3ab495;
+    }
+
+    select {
+      padding: 0.4rem 0.6rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+<body class="">
+  <div class="sidebar">
+    <button class="active" onclick="switchSection('general')">General Settings</button>
+    <button onclick="switchSection('timer')">Timer Settings</button>
+    <button onclick="switchSection('template')">Daily Template</button>
+    <button onclick="switchSection('tasks')">My Tasks</button>
+    <button onclick="switchSection('reports')">Reports</button>
+    <button onclick="switchSection('export')">Export & Import</button>
+    <button onclick="switchSection('about')">About</button>
+  </div>
+
+  <div class="content">
+    <div id="general" class="card section">
+      <h2>General Settings</h2>
+      <label>Theme:
+        <select onchange="toggleTheme(this.value)">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </label>
+    </div>
+
+    <div id="timer" class="card section" style="display:none">
+      <h2>Timer Settings</h2>
+      <p>Configure default durations, break times, and auto-pause behavior here.</p>
+    </div>
+
+    <div id="template" class="card section" style="display:none">
+      <h2>Daily Template</h2>
+      <p>Manage recurring daily tasks to auto-fill your focus queue.</p>
+    </div>
+
+    <div id="tasks" class="card section" style="display:none">
+      <h2>My Tasks</h2>
+      <p>Manage tasks for today and tomorrow. Add or exclude as needed.</p>
+    </div>
+
+    <div id="reports" class="card section" style="display:none">
+      <h2>Reports</h2>
+      <div class="tab-nav">
+        <button class="active" onclick="switchTab(this, 'history')">History</button>
+        <button onclick="switchTab(this, 'tags')">Tag Analysis</button>
+      </div>
+      <div id="history" class="report-tab">
+        <p>(Demo: Table of completed tasks)</p>
+      </div>
+      <div id="tags" class="report-tab" style="display:none">
+        <p>(Demo: Donut chart of tag usage with progress bars)</p>
+      </div>
+    </div>
+
+    <div id="export" class="card section" style="display:none">
+      <h2>Export & Import</h2>
+      <p>Export your settings or restore from a backup.</p>
+    </div>
+
+    <div id="about" class="card section" style="display:none">
+      <h2>About IronFocus</h2>
+      <p>Version 1.0. Built by Shanto with focus and purpose.</p>
+    </div>
+  </div>
+
+  <script>
+    function switchSection(sectionId) {
+      document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+      document.getElementById(sectionId).style.display = 'block';
+      document.querySelectorAll('.sidebar button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function switchTab(button, tabId) {
+      document.querySelectorAll('.report-tab').forEach(tab => tab.style.display = 'none');
+      document.getElementById(tabId).style.display = 'block';
+      document.querySelectorAll('.tab-nav button').forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+    }
+
+    function toggleTheme(theme) {
+      document.body.className = (theme === 'dark') ? 'dark' : '';
+    }
+  </script>
+</body>
+</html>

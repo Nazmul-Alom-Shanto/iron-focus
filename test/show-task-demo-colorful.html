@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IronFocus Task Running</title>
+  <style>
+    :root {
+      --accent1: #6C63FF;
+      --accent2: #48C9B0;
+      --bg-gradient: linear-gradient(135deg, #f0f4ff, #d6e9fb);
+      --text-color: #1e1e2f;
+      --highlight: #ffbe76;
+      --progress-bg: #d0d7ec;
+      --progress-fill: #6C63FF;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 250px;
+      height: 133px;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      user-select: none;
+      background-repeat: no-repeat;
+      border-radius: 16px;
+    }
+    html {
+      background: #fff;
+    }
+    .title {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(#fff);
+      margin-bottom: 0.2rem;
+      max-width: 240px;
+      display: flex;
+      /*align-items: center;*/
+      /*gap: 0.3rem;*/
+      max-height: 50px;
+      text-align: start;
+      word-wrap: no-repeat;
+      overflow: hidden;
+       text-overflow: ellipsis;
+    }
+
+    .title::before {
+      margin-top: 0.2rem;
+  content: "📝";
+  font-size: 1.2rem;
+  /*display: inline-block;   */
+  vertical-align: text-top;     
+  line-height: 1;
+}
+
+
+    .quote {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--highlight);
+      /*color: red;*/
+      color: #e67e22  ;
+      margin-bottom: 0.1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .countdown {
+      font-size: 2.6rem;
+      font-weight:bolder;
+      color: var(--accent2);
+      color: #1E8576;
+      cursor: pointer;
+    }
+
+    .countdown:hover::after {
+      content: attr(data-elapsed);
+      position: absolute;
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      transform: translateX(-100%);
+    }
+
+    .progress-container {
+      width: 85%;
+      height: 6px;
+      background: var(--progress-bg);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 0.4rem;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 60%; /* Example */
+      background: var(--progress-fill);
+      transition: width 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="title">Revise Physics Ch 4</div>
+  <div class="quote">"Success is the sum of small efforts."</div>
+  <div class="countdown" id="countdown" data-elapsed="⏱ 7 min 32 sec elapsed">25:00</div>
+  <div class="progress-container">
+    <div class="progress-bar" id="progress"></div>
+  </div>
+
+  <script>
+    // For demo purposes
+    let total = 25 * 60; // 25 min in sec
+    let remaining = total;
+    let elapsed = 0;
+
+    const countdownEl = document.getElementById('countdown');
+    const progressEl = document.getElementById('progress');
+
+    function formatTime(secs) {
+      const m = Math.floor(secs / 60).toString().padStart(2, '0');
+      const s = (secs % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function formatElapsed(secs) {
+      const h = Math.floor(secs / 3600);
+      const m = Math.floor((secs % 3600) / 60);
+      const s = secs % 60;
+      let result = '';
+      if (h > 0) result += `${h}h:`;
+      result += `${m}m:${s}s`;
+      return `⏱ ${result}`;
+    }
+
+    function tick() {
+      if (remaining > 0) {
+        remaining--;
+        elapsed++;
+        countdownEl.textContent = formatTime(remaining);
+        countdownEl.setAttribute('data-elapsed', formatElapsed(elapsed));
+        const percent = 100 * (1 - remaining / total);
+        progressEl.style.width = `${percent}%`;
+      }
+    }
+
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>

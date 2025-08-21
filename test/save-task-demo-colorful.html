@@ -1,0 +1,70 @@
+<head>
+  <link rel="stylesheet" type="text/css" href="..\assets\css\save-task-demo-colorful.css">  
+</head>
+<body> 
+  <div class="form-card">
+    <form id="task-form">
+      <div class="form-group">
+        <label for="title">📝 Task Title</label>
+        <input type="text" id="title" name="title" placeholder="e.g., Solved Math Mock Test" required />
+      </div>
+
+      <div class="form-group">
+        <label for="tags">🏷️ Tags</label>
+        <input type="text" id="tags" name="tags" placeholder="e.g., math, revision" />
+        <div class="tag-hint">Use commas. Suggestions soon.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="success">🎯 Success Rate</label>
+        <div class="success-value">
+          <span>0%</span>
+          <span id="success-display">50%</span>
+          <span>100%</span>
+        </div>
+        <input type="range" id="success" name="successRate" min="0" max="100" value="50" />
+      </div>
+
+      <div class="form-group">
+        <label for="reflection">🪞 Reflection (optional)</label>
+        <textarea id="reflection" name="reflection" rows="4" placeholder="Short insight about the task…"></textarea>
+      </div>
+
+      <button type="submit">✔ Save Entry</button>
+    </form>
+  </div>
+
+  <script>
+    const slider = document.getElementById('success');
+    const display = document.getElementById('success-display');
+    slider.addEventListener('input', () => {
+      display.textContent = `${slider.value}%`;
+      updateSliderBackground();
+    });
+
+    document.getElementById('task-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const data = {
+        title: e.target.title.value.trim(),
+        tags: e.target.tags.value.split(',').map(t => t.trim()).filter(Boolean),
+        successRate: parseInt(e.target.success.value),
+        reflection: e.target.reflection.value.trim(),
+        timestamp: new Date().toISOString()
+      };
+      console.log("Submitted:", data);
+      e.target.reset();
+      slider.value = 50;
+      display.textContent = "50%";
+    });
+    updateSliderBackground();
+     function updateSliderBackground() {
+    const value = slider.value;
+    const min = slider.min;
+    const max = slider.max;
+    const percent = ((value - min) / (max - min)) * 100;
+
+    // Color left of thumb, transparent right
+    slider.style.background = `linear-gradient(to right, var(--accent1) ${percent}%, transparent ${percent}%)`;
+  }
+  </script>
+</body>

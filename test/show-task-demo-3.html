@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IronFocus - Task Mini View</title>
+  <style>
+    :root {
+      --accent1: #6C63FF;
+      --accent2: #48C9B0;
+      --highlight: #FFB366;
+      --text-color: #222;
+      --bg-color: #f0f4ff;
+      --header-gradient: linear-gradient(to right, #6C63FF, #48C9B0);
+      --progress-bg: #e6e9ff;
+      --progress-fill: #6C63FF;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 250px;
+      height: 133px;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-color);
+    }
+
+    .task-mini {
+      width: 240px;
+      height: 125px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .task-header {
+      background: var(--header-gradient);
+      color: white;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .quote {
+      font-style: italic;
+      font-size: 12px;
+      color: var(--highlight);
+      text-align: center;
+      padding: 4px 8px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .progress-container {
+      position: relative;
+      background: var(--progress-bg);
+      height: 22px;
+      border-radius: 12px;
+      margin: 4px 12px 8px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--progress-fill);
+      width: 65%;
+      transition: width 0.4s ease;
+    }
+
+    .time-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 13px;
+      font-weight: bold;
+      font-family: 'Courier New', Courier, monospace;
+      color: #fff;
+      pointer-events: none;
+    }
+
+    .progress-container::after {
+      content: attr(data-hover);
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: #666;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .progress-container:hover::after {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="task-mini">
+    <div class="task-header">📘 Math Set Practice</div>
+    <div class="quote">“Deep focus. Light mind.”</div>
+    <div class="progress-container" data-hover="⏱ Spent: 14:12">
+      <div class="progress-bar"></div>
+      <div class="time-label">23:14 left</div>
+    </div>
+  </div>
+</body>
+</html>

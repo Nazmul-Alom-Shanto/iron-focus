@@ -1,0 +1,360 @@
+{
+  "study": {
+    "total": 19.5,
+    "children": {
+      "math": {
+        "total": 8,
+        "children": {
+          "calculus": {
+            "total": 2,
+            "children": {}
+          },
+          "linear algebra": {
+            "total": 1.5,
+            "children": {}
+          },
+          "probability": {
+            "total": 1,
+            "children": {}
+          },
+          "statistics": {
+            "total": 1.5,
+            "children": {}
+          },
+          "differential equations": {
+            "total": 2,
+            "children": {}
+          }
+        }
+      },
+      "physics": {
+        "total": 7.5,
+        "children": {
+          "mechanics": {
+            "total": 1.5,
+            "children": {}
+          },
+          "thermodynamics": {
+            "total": 1,
+            "children": {}
+          },
+          "optics": {
+            "total": 1,
+            "children": {}
+          },
+          "quantum physics": {
+            "total": 2,
+            "children": {}
+          },
+          "electromagnetism": {
+            "total": 2,
+            "children": {}
+          }
+        }
+      },
+      "chemistry": {
+        "total": 2,
+        "children": {
+          "organic": {
+            "total": 1,
+            "children": {}
+          },
+          "inorganic": {
+            "total": 1,
+            "children": {}
+          }
+        }
+      },
+      "biology": {
+        "total": 2,
+        "children": {
+          "cell biology": {
+            "total": 1,
+            "children": {}
+          },
+          "genetics": {
+            "total": 1,
+            "children": {}
+          }
+        }
+      }
+    }
+  },
+  "coding": {
+    "total": 11.5,
+    "children": {
+      "web development": {
+        "total": 4,
+        "children": {
+          "frontend": {
+            "total": 2,
+            "children": {}
+          },
+          "backend": {
+            "total": 2,
+            "children": {}
+          }
+        }
+      },
+      "python": {
+        "total": 1,
+        "children": {
+          "scripts": {
+            "total": 1,
+            "children": {}
+          }
+        }
+      },
+      "projects": {
+        "total": 1.5,
+        "children": {
+          "personal website": {
+            "total": 1.5,
+            "children": {}
+          }
+        }
+      },
+      "data structures": {
+        "total": 2,
+        "children": {
+          "algorithms": {
+            "total": 2,
+            "children": {}
+          }
+        }
+      },
+      "machine learning": {
+        "total": 2,
+        "children": {
+          "models": {
+            "total": 2,
+            "children": {}
+          }
+        }
+      },
+      "debugging": {
+        "total": 1,
+        "children": {}
+      }
+    }
+  },
+  "problem solving": {
+    "total": 4.5,
+    "children": {
+      "leetcode": {
+        "total": 1,
+        "children": {
+          "medium": {
+            "total": 1,
+            "children": {}
+          }
+        }
+      },
+      "math olympiad": {
+        "total": 1.5,
+        "children": {}
+      },
+      "contest preparation": {
+        "total": 2,
+        "children": {}
+      }
+    }
+  },
+  "academic": {
+    "total": 3.5,
+    "children": {
+      "research": {
+        "total": 1,
+        "children": {
+          "papers": {
+            "total": 1,
+            "children": {}
+          }
+        }
+      },
+      "reading": {
+        "total": 1.5,
+        "children": {
+          "textbooks": {
+            "total": 1.5,
+            "children": {}
+          }
+        }
+      },
+      "note taking": {
+        "total": 1,
+        "children": {}
+      }
+    }
+  },
+  "entertainment": {
+    "total": 7,
+    "children": {
+      "youtube": {
+        "total": 1.5,
+        "children": {
+          "educational": {
+            "total": 0.5,
+            "children": {}
+          },
+          "comedy": {
+            "total": 1,
+            "children": {}
+          }
+        }
+      },
+      "netflix": {
+        "total": 2,
+        "children": {
+          "movies": {
+            "total": 2,
+            "children": {}
+          }
+        }
+      },
+      "spotify": {
+        "total": 1,
+        "children": {
+          "music": {
+            "total": 1,
+            "children": {}
+          }
+        }
+      },
+      "facebook": {
+        "total": 0.5,
+        "children": {
+          "scrolling": {
+            "total": 0.5,
+            "children": {}
+          }
+        }
+      },
+      "instagram": {
+        "total": 0.5,
+        "children": {
+          "reels": {
+            "total": 0.5,
+            "children": {}
+          }
+        }
+      },
+      "gaming": {
+        "total": 1.5,
+        "children": {
+          "casual": {
+            "total": 1.5,
+            "children": {}
+          }
+        }
+      }
+    }
+  },
+  "communication": {
+    "total": 2,
+    "children": {
+      "email": {
+        "total": 0.5,
+        "children": {
+          "academic": {
+            "total": 0.5,
+            "children": {}
+          }
+        }
+      },
+      "messaging": {
+        "total": 0.5,
+        "children": {
+          "friends": {
+            "total": 0.5,
+            "children": {}
+          }
+        }
+      },
+      "meet": {
+        "total": 1,
+        "children": {
+          "group project": {
+            "total": 1,
+            "children": {}
+          }
+        }
+      }
+    }
+  },
+  "planning": {
+    "total": 1.5,
+    "children": {
+      "task list": {
+        "total": 0.5,
+        "children": {
+          "todo app": {
+            "total": 0.5,
+            "children": {}
+          }
+        }
+      },
+      "calendar": {
+        "total": 0.5,
+        "children": {
+          "scheduling": {
+            "total": 0.5,
+            "children": {}
+          }
+        }
+      },
+      "goal review": {
+        "total": 0.5,
+        "children": {}
+      }
+    }
+  },
+  "break": {
+    "total": 1,
+    "children": {
+      "snack": {
+        "total": 0.5,
+        "children": {
+          "relax": {
+            "total": 0.5,
+            "children": {}
+          }
+        }
+      },
+      "walk": {
+        "total": 0.5,
+        "children": {
+          "refresh": {
+            "total": 0.5,
+            "children": {}
+          }
+        }
+      }
+    }
+  },
+  "other": {
+    "total": 3.5,
+    "children": {
+      "file organization": {
+        "total": 0.5,
+        "children": {}
+      },
+      "system updates": {
+        "total": 0.5,
+        "children": {}
+      },
+      "exploring new tools": {
+        "total": 1,
+        "children": {}
+      },
+      "random browsing": {
+        "total": 1,
+        "children": {}
+      },
+      "procrastination": {
+        "total": 0.5,
+        "children": {}
+      }
+    }
+  }
+}

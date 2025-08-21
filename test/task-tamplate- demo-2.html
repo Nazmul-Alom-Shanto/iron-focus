@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Task Template Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --accent1: #6C63FF;
+      --accent-light: #e6e9ff;
+      --bg: linear-gradient(135deg, #fdfbfb, #ebedee);
+      --muted: #7b7f9e;
+      --green: #10b981;
+      --blue: #3b82f6aa;
+      --red: #ef4444aa;
+
+      --card-bg: linear-gradient(145deg, #ffffff, #f4f7fa);
+      --card-border: 2px solid #dfe6f2;
+      --card-shadow: 0 10px 30px rgba(108, 99, 255, 0.08);
+      --tag-color : #004d40;
+      --tag-bg : #b2dfdb;
+      --template-task-border : 6px solid #0e9e6f;
+
+      --task-bg : #fff;
+      --task-bg-shadow : 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+    .dark {
+  --accent1: #9aa1ff;                      /* Soft violet for contrast */
+  --accent-light: #2f325c;                 /* Muted dark indigo for tag bg, etc. */
+  --bg: linear-gradient(135deg, #141517, #1e1f22); /* Deep dark gradient background */
+  --muted: #a3a5b8;                        /* Muted gray for secondary text */
+  --green: #34d399;                       /* Lighter green (for dark bg) */
+  --blue: #60a5fa;                        /* Lighter blue with some alpha */
+  --red: #f87171;                         /* Lighter red (alert) */
+
+  --card-bg: linear-gradient(145deg, #1c1d2a, #232636); /* Elevated card surface */
+  --card-border: 2px solid #2d2f45;        /* Subtle border for cards */
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); /* Deeper shadows */
+
+  --tag-color: #c8f5f1;                   /* Soft mint text */
+  --tag-bg: #255f57;                      /* Rich deep teal background */
+  --template-task-border: 6px solid #34d399;
+
+  --task-bg: #2b2e3a;
+  --task-bg-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      padding: 2rem;
+      color: #333;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: var(--card-border);
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 2rem;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: var(--accent1);
+    }
+
+    .task-creator {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      background: var(--task-bg);
+      padding: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+
+    .task-creator input,
+    .task-creator button {
+      padding: 0.6rem 0.9rem;
+      border-radius: 0.6rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      transition: 0.2s ease;
+    }
+
+    .task-creator input:focus {
+      border-color: var(--accent1);
+      outline: none;
+    }
+
+    .task-creator button {
+      background: var(--green);
+      color: -var(--text-invert);
+      border: none;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .task-creator button:hover {
+      background: var(--accent1-hover);
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .task-card {
+      background: var(--task-bg);
+      border-radius: 1rem;
+      box-shadow: var(--task-bg-shadow);
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: 0.3s ease;
+      position: relative;
+      border-left: var(--template-task-border);
+    }
+
+    .task-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      flex: 1;
+    }
+
+    .task-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .task-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--accent1); /* Soft navy/dark-indigo */
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.03); /* Gentle shadow for lift */
+  letter-spacing: 0.2px;
+}
+    .task-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 4px;
+    }
+
+    .task-tags span {
+        position: relative;
+      background: var(--tag-bg);
+      color: var(--tag-color);
+      padding: 3px 14px;
+      border-radius: 4px;
+      font-weight: 400;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+    }
+.task-tags span::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 8px solid var(--tag-bg);
+}
+.task-tags span:last-child::after {
+    border-left: none;
+}
+    .task-time {
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-left: 1rem;
+      margin-right: 1rem;
+      white-space: nowrap;
+    }
+
+    .task-actions {
+    position: absolute;
+    /* right: 100px; */
+    right:  10px;
+
+      display: none;
+      gap: 1.5rem;
+      opacity: 1;
+      flex-direction: column;
+      transition: opacity 0.2s ease;
+      /* right: 1rem; */
+    }
+
+    .task-card:hover .task-actions {
+      opacity: 1;
+      display: flex;
+    }
+
+    .task-actions button {
+      border: none;
+      border-radius: 100%;
+      background: var(--task-bg);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 4px;
+    }
+
+    .task-actions .edit-btn {
+      color: var(--blue);
+    }
+
+    .task-actions .delete-btn {
+      color: var(--red);
+    }
+
+    .task-editing {
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      padding: 6px 10px;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    .editing-card {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .editing-card input {
+      padding: 0.6rem 0.9rem;
+      border-radius: 0.6rem;
+      font-size: 1rem;
+      border: 1px solid var(--accent1);
+      transition: 0.2s ease;
+      outline: none;
+    }
+    .task-editing input:focus {
+        border: 2px solid var(--accent1);
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="card">
+    <h2>Daily Template</h2>
+    <div class="task-creator">
+      <input type="text" id="title" placeholder="Task Title">
+      <input type="number" id="time" placeholder="Time (min)" min="0">
+      <input type="text" id="tags" placeholder="Tags (comma separated)">
+      <button onclick="addTaskToTemplate()">Add Task</button>
+    </div>
+    <div class="task-list" id="taskList"></div>
+  </div>
+
+  <script>
+    let dummyTaskTemplate = [
+  {
+    title: 'Solve 2 Math Problems',
+    time: 30,
+    tags : ['study', 'math']
+  },
+  {
+    title: 'Revise Biology Diagrams',
+    time: 25,
+    tags : ['study', 'biology']
+  },
+  {
+    title: 'Work on IronFocus UI',
+    time: 45,
+    tags : ['work', 'ui']
+  },
+  {
+    title: 'Quran Hifz Revision',
+    time: 35,
+    tags : ['study', 'quran']
+  }
+] 
+
+
+    function addTaskToTemplate() {
+      const title = document.getElementById("title").value.trim();
+      const time = document.getElementById("time").value.trim();
+      const tags = document.getElementById("tags").value.trim().split(',').map(t => t.trim()).filter(Boolean);
+
+      if (!title || !time) return;
+
+      dummyTaskTemplate.push({ title, time, tags, editing: false });
+      renderTasks();
+
+      document.getElementById("title").value = "";
+      document.getElementById("time").value = "";
+      document.getElementById("tags").value = "";
+    }
+renderTasks();
+    function renderTasks() {
+      const container = document.getElementById("taskList");
+      container.innerHTML = "";
+
+      dummyTaskTemplate.forEach((task, index) => {
+        const card = document.createElement("div");
+        card.className = "task-card" + (task.editing ? " editing-card" : "");
+
+        if (task.editing) {
+          card.innerHTML = `
+            <input class="task-editing" type="text" value="${task.title}" id="edit-title-${index}">
+            <input class="task-editing" type="number" value="${task.time}" id="edit-time-${index}">
+            <input class="task-editing" type="text" value="${task.tags.join(', ')}" id="edit-tags-${index}">
+            <div class="task-actions">
+              <button class="edit-btn" onclick="saveTask(${index})"><i class="fas fa-check"></i></button>
+              <button class="delete-btn" onclick="cancelEdit(${index})"><i class="fas fa-xmark"></i></button>
+            </div>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="task-main">
+              <div class="task-title">${task.title}</div>
+              <div class="task-tags">${task.tags.map(tag => `<span>${tag}</span>`).join(' ')}</div>
+            </div>
+            <div class="task-time">${task.time} min</div>
+            <div class="task-actions">
+              <button class="edit-btn" onclick="editTask(${index})"><i class="fas fa-pen"></i></button>
+              <button class="delete-btn" onclick="deleteTask(${index})"><i class="fas fa-trash"></i></button>
+            </div>
+          `;
+        }
+
+        container.appendChild(card);
+      });
+    }
+
+    function editTask(index) {
+      dummyTaskTemplate[index].editing = true;
+      renderTasks();
+    }
+
+    function cancelEdit(index) {
+      dummyTaskTemplate[index].editing = false;
+      renderTasks();
+    }
+
+    function saveTask(index) {
+      const title = document.getElementById(`edit-title-${index}`).value.trim();
+      const time = document.getElementById(`edit-time-${index}`).value.trim();
+      const tags = document.getElementById(`edit-tags-${index}`).value.trim().split(',').map(t => t.trim()).filter(Boolean);
+
+      if (!title || !time) return;
+
+      dummyTaskTemplate[index] = { title, time, tags, editing: false };
+      renderTasks();
+    }
+
+    function deleteTask(index) {
+      dummyTaskTemplate.splice(index, 1);
+      renderTasks();
+    }
+  </script>
+</body>
+</html>

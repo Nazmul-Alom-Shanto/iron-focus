@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Goal Card Demo</title>
+  <style>
+    :root {
+      --bg: #f8f9fb;
+      --card-bg: #ffffff;
+      --text: #222;
+      --accent: #6c63ff;
+      --progress-bg: #e0e0e0;
+      --progress-fill: var(--accent);
+      --border: #dcdce4;
+      --checkbox: #3b82f6;
+    }
+
+    .dark-mode {
+      --bg: #1a1c25;
+      --card-bg: #2b2e3a;
+      --text: #f0f1f7;
+      --accent: #8f86ff;
+      --progress-bg: #3a3d4a;
+      --progress-fill: var(--accent);
+      --border: #444654;
+      --checkbox: #60a5fa;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: "Segoe UI", sans-serif;
+      padding: 2rem;
+      color: var(--text);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .goal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.2rem;
+      transition: background 0.3s ease;
+    }
+
+    .goal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .goal-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      margin: 0.8rem 0;
+      height: 8px;
+      width: 100%;
+      background: var(--progress-bg);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--progress-fill);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .subtasks {
+      margin-top: 0.5rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-left: 1rem;
+    }
+
+    .subtask {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .subtask input[type="checkbox"] {
+      accent-color: var(--checkbox);
+      width: 18px;
+      height: 18px;
+    }
+
+    .weight-label {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    .expanded .subtasks {
+      display: flex;
+    }
+  </style>
+</head>
+<body class="dark- mode">
+  <div class="goal-card" data-weighted>
+    <div class="goal-header" onclick="toggleExpand(this)">
+      <span class="goal-title">📘 Build Tag Input Feature</span>
+      <span class="goal-progress-text">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+    <div class="subtasks">
+      <label class="subtask">
+        <input type="checkbox" data-value="10" onchange="updateProgress(this)">
+        Design UI <span class="weight-label">(10)</span>
+      </label>
+      <label class="subtask">
+        <input type="checkbox" data-value="30" onchange="updateProgress(this)">
+        Handle input logic <span class="weight-label">(30)</span>
+      </label>
+      <label class="subtask">
+        <input type="checkbox" data-value="20" onchange="updateProgress(this)">
+        Show suggestions <span class="weight-label">(20)</span>
+      </label>
+      <label class="subtask">
+        <input type="checkbox" data-value="10" onchange="updateProgress(this)">
+        Style suggestion box <span class="weight-label">(10)</span>
+      </label>
+      <label class="subtask">
+        <input type="checkbox" data-value="30" onchange="updateProgress(this)">
+        Handle tag selection <span class="weight-label">(30)</span>
+      </label>
+    </div>
+  </div>
+
+  <script>
+    function toggleExpand(headerEl) {
+      const card = headerEl.closest(".goal-card");
+      card.classList.toggle("expanded");
+    }
+
+    function updateProgress(checkboxEl) {
+      const card = checkboxEl.closest(".goal-card");
+      const checkboxes = card.querySelectorAll('input[type="checkbox"]');
+      let total = 0;
+      let current = 0;
+
+      checkboxes.forEach(cb => {
+        const value = parseFloat(cb.dataset.value || "0");
+        total += value;
+        if (cb.checked) current += value;
+      });
+
+      const percent = total === 0 ? 0 : Math.round((current / total) * 100);
+      card.querySelector(".progress-fill").style.width = percent + "%";
+      card.querySelector(".goal-progress-text").textContent = percent + "%";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IronFocus - Paused</title>
+  <style>
+    :root {
+      --accent1: #6C63FF;
+      --accent2: #48C9B0;
+      --highlight: #FFB366;
+      --text-color: #1e1e2f;
+      --bg-gradient: linear-gradient(135deg, #f0f4ff, #d6e9fb);
+      --progress-bg: #d0d7ec;
+      --progress-fill: #6C63FF;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+
+    .pause-card {
+      background: white;
+      border-radius: 20px;
+      padding: 3rem 4rem;
+      max-width: 600px;
+      width: 90vw;
+      text-align: center;
+      box-shadow: 0 15px 50px rgba(108, 99, 255, 0.3);
+      animation: fadeIn 0.6s ease;
+    }
+
+    .pause-card h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--accent1);
+    }
+
+    .task-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+    }
+
+    .timing {
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+      color: var(--accent2);
+    }
+
+    .progress-container {
+      background: var(--progress-bg);
+      border-radius: 8px;
+      height: 10px;
+      overflow: hidden;
+      margin: 1rem 0 2rem;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 48%;
+      background: var(--progress-fill);
+      transition: width 0.4s ease;
+    }
+
+    .quote {
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--highlight);
+      margin-bottom: 2.5rem;
+    }
+
+    .resume-btn {
+      background: var(--accent1);
+      color: white;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .resume-btn:hover {
+      background: #5a53d9;
+    }
+
+    .shortcut-hint {
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="pause-card">
+    <h1>⏸ Paused</h1>
+    <div class="task-title">📝 Revise Physics Ch 4</div>
+    <div class="timing">
+      ⏱ Elapsed: 07:12 &nbsp;&nbsp;&nbsp; ⌛ Remaining: 17:48
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar" style="width: 40%"></div>
+    </div>
+    <div class="quote">“You paused. That’s fine. But don’t stop.”</div>
+    <button class="resume-btn" id="resume">Resume Task</button>
+    <div class="shortcut-hint">(Press <b>Enter</b> or <b>Space</b> to resume)</div>
+  </div>
+
+  <script>
+    document.getElementById("resume").addEventListener("click", () => {
+      alert("✅ Resuming task...");
+      // Hook this to your resume logic
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        document.getElementById("resume").click();
+      }
+    });
+  </script>
+</body>
+</html>

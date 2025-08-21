@@ -1,0 +1,45 @@
+<form class="p-4 shadow dropdown-content z-[1] bg-neutral rounded-box flex flex-col">
+    <div class="flex gap-4">
+        <ul class="menu w-44 flex-1">
+            <li class="menu-title">Select date range</li>
+            <li data-testid="option-today"><button type="button"
+                    class="active !bg-primary !text-primary-content">Today</button></li>
+            <li data-testid="option-yesterday"><button type="button" class="">Yesterday</button></li>
+            <li data-testid="option-last-7-days"><button type="button" class="">Last 7 days</button></li>
+            <li data-testid="option-last-30-days"><button type="button" class="">Last 30 days</button></li>
+            <li data-testid="option-this-month"><button type="button" class="">This month</button></li>
+        </ul>
+        <div class="SfDateRangeInput select-none">
+            <div class="litepicker" data-plugins="" style="display: inline-block; position: relative;">
+                <div class="container__main">
+                    <div class="container__months">
+                        <div class="month-item no-next-month">
+                            <div class="month-item-header"><button type="button" class="button-previous-month"><svg
+                                        width="11" height="16" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7.919 0l2.748 2.667L5.333 8l5.334 5.333L7.919 16 0 8z"
+                                            fill-rule="nonzero"></path>
+                                    </svg></button>
+                                <div><strong class="month-item-name">July</strong><span
+                                        class="month-item-year">2025</span></div><button type="button"
+                                    class="button-next-month"><svg width="11" height="16"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M2.748 16L0 13.333 5.333 8 0 2.667 2.748 0l7.919 8z"
+                                            fill-rule="nonzero"></path>
+                                    </svg></button>
+                            </div>
+                            <div class="month-item-weekdays-row">
+                                <div title="Sunday">Sun</div>
+                                <div title="Monday">Mon</div>
+                                <div title="Tuesday">Tue</div>
+                                <div title="Wednesday">Wed</div>
+                                <div title="Thursday">Thu</div>
+                                <div title="Friday">Fri</div>
+                                <div title="Saturday">Sat</div>
+                            </div>
+                            <div class="container__days">
+                                <div></div>
+                                <div></div>
+                                <div class="day-item" data-time="1751306400000" tabindex="0">1</div>
+                                <div class="day-item" data-time="1751392800000" tabindex="0">2</div>
+                                <div class="day-item" data-time="1751479200000" tabindex="0">3</div>
+                                <div class="day-item" data-time="1751565600000" tabindex="0

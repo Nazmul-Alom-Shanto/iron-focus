@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Message Box Demo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #f4f6fc;
+      padding: 2rem;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn-group button {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+    }
+
+    button.success { background: #48C9B0; color: white; }
+    button.warning { background: #f39c12; color: white; }
+    button.error   { background: #e74c3c; color: white; }
+    button.info    { background: #3498db; color: white; }
+
+    #message-box {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 250px;
+      height: 140px;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      color: #fff;
+      z-index: 9999;
+      padding: 1rem;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease-in-out;
+      opacity: 0;
+    }
+
+    #message-box.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    #message-box .msg-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    #message-box .msg-text {
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+    }
+
+    #message-box.success { background: #48C9B0; }
+    #message-box.warning { background: #f39c12; }
+    #message-box.error   { background: #e74c3c; }
+    #message-box.info    { background: #3498db; }
+
+    #message-box button.close-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧪 Message Box Demo</h1>
+  <div class="btn-group">
+    <button class="success" onclick="showMessage('success', 'Task saved successfully!', 'auto')">Success (Auto)</button>
+    <button class="warning" onclick="showMessage('warning', 'Missing input field!', 'auto')">Warning (Auto)</button>
+    <button class="error" onclick="showMessage('error', 'Something went wrong!', 'manual')">Error (Manual)</button>
+    <button class="info" onclick="showMessage('info', 'Backup completed.', 'auto')">Info (Auto)</button>
+  </div>
+
+  <div id="message-box"></div>
+
+  <script>
+    function showMessage(type, message, mode = "auto") {
+      const icons = {
+        success: "✅",
+        warning: "⚠️",
+        error: "❌",
+        info: "ℹ️"
+      };
+
+      const box = document.getElementById('message-box');
+      box.className = `show ${type}`;
+      box.innerHTML = `
+        <div class="msg-header">
+          <span>${icons[type] || ""} ${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+          <button class="close-btn" onclick="hideMessage()">×</button>
+        </div>
+        <div class="msg-text">${message}</div>
+      `;
+
+      if (mode === 'auto') {
+        setTimeout(() => hideMessage(), 4000);
+      }
+    }
+
+    function hideMessage() {
+      const box = document.getElementById('message-box');
+      box.classList.remove('show');
+      setTimeout(() => {
+        box.style.display = 'none';
+      }, 300);
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Tag Input Demo</title>
+  <style>
+    :root {
+           --tag-color: #004d40;
+      --tag-bg: #b2dfdb;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f3f4f6;
+      padding: 2rem;
+    }
+
+    .tag-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .tag-input-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 6px 8px;
+      min-height: 44px;
+      cursor: text;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      align-items: center;
+    }
+    .suggestion-item.highlighted {
+  background: #bae6fd;
+  font-weight: bold;
+}
+
+/* 
+    .tag-chip {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 4px 8px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    } */
+
+    .tag-chip {
+        position: relative;
+      background: var(--tag-bg);
+      color: var(--tag-color);
+      padding: 3px 14px;
+      border-radius: 4px;
+      font-weight: 400;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+      margin-right: 5px;
+      height: max-content;
+    }
+.tag-chip::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 8px solid var(--tag-bg);
+}
+.tag-chip:last-child::after {
+    border-left: 0px solid #000;
+}
+    .tag-chip button {
+        display : none;
+      background: none;
+      border: none;
+      color: #0369a1;
+      margin-left: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .tag-input-container input {
+      border: none;
+      outline: none;
+      font-size: 15px;
+      min-width: 120px;
+      flex: 1;
+      padding: 4px;
+    }
+
+    .suggestion-box {
+      position: absolute;
+      background: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 6px;
+      margin-top: 4px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .suggestion-item {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .suggestion-item:hover {
+      background: #e0f2fe;
+    }
+  </style>
+</head>
+<body>
+  <div class="tag-wrapper">
+    <h2>Task Tags</h2>
+    <div id="tagInput" class="tag-input-container"></div>
+    <div id="suggestions" class="suggestion-box" style="display: none;"></div>
+    <button id="btn">show output</button>
+  </div>
+
+  <script>
+    let selectedIndex = -1;
+
+    const tagTree = {
+      study: {
+        math: {
+          calculus: {},
+          algebra: {}
+        },
+        physics: {}
+      },
+      work: {
+        js: {},
+        design: {}
+      },
+      'bro hey' : {}
+    };
+
+    function getTagsAtPath(tree, path) {
+      let node = tree;
+      for (const part of path) {
+        if (!node[part]) return [];
+        node = node[part];
+      }
+      return Object.keys(node);
+    }
+
+    function initTagInput(container, suggestionBox, tree) {
+      const input = document.createElement("input");
+      container.appendChild(input);
+
+      let selectedTags = [];
+
+      function updateUI() {
+        container.innerHTML = "";
+        selectedTags.forEach((tag, i) => {
+          const span = document.createElement("span");
+          span.className = "tag-chip";
+          span.textContent = tag;
+          container.appendChild(span);
+        });
+        container.appendChild(input);
+        input.focus();
+        setTimeout(()=> {
+            showSuggestions();
+        }, 100);
+      }
+
+      function getFilteredSuggestions(inputValue) {
+        const parts = inputValue.split(",").map(p => p.trim()).filter(Boolean);
+        const path = parts.slice(0, -1);
+        const token = parts[parts.length - 1] || "";
+        const children = getTagsAtPath(tree, selectedTags);
+        console.log(`Current path: ${path.join(" > ")}, token: ${token}`);
+        console.log(`Children at path: ${JSON.stringify(children)}`);
+        return children.filter(child => child.toLowerCase().startsWith(token.toLowerCase()));
+      }
+      function showSuggestions()  {
+        selectedIndex = -1;
+        const val = input.value;
+        console.log(`Input value: a${val}a`);
+        const suggestions = getFilteredSuggestions(val);
+        console.log(`Suggestions: ${JSON.stringify(suggestions)}`);
+        suggestionBox.innerHTML = "";
+        if (suggestions.length === 0) {
+          suggestionBox.style.display = "none";
+            console.log("No suggestions found");
+          return;
+        }
+    
+        suggestions.forEach(suggestion => {
+          const item = document.createElement("div");
+          item.className = "suggestion-item";
+          item.textContent = suggestion;
+          item.onclick = () => {
+            selectedTags.push(suggestion);
+            input.value = " ";
+            updateUI();
+            suggestionBox.style.display = "none";
+          };
+          suggestionBox.appendChild(item);
+        });
+
+        const rect = container.getBoundingClientRect();
+        suggestionBox.style.top = `${rect.bottom + window.scrollY}px`;
+        suggestionBox.style.left = `${rect.left + window.scrollX}px`;
+        suggestionBox.style.width = `${rect.width}px`;
+        suggestionBox.style.display = "block";
+      }
+
+
+      input.addEventListener("input", showSuggestions);
+
+      input.addEventListener("keydown", (e) => {
+  const items = suggestionBox.querySelectorAll(".suggestion-item");
+
+   if ((e.key === "ArrowDown" || (e.key === "Tab" && !e.shiftKey)) && items.length > 0) {
+    e.preventDefault();
+    selectedIndex = (selectedIndex + 1) % items.length;
+    highlightSuggestion(items, selectedIndex);
+  } else if(e.key === "Tab" && items.length === 0){
+    // do nothing, just allow tab to move focus
+  } else if ((e.key === "ArrowUp" || (e.key === "Tab" && e.shiftKey)) && items.length > 0) {
+    e.preventDefault();
+    selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+    highlightSuggestion(items, selectedIndex);} else if (e.key === "Enter" && selectedIndex !== -1 && items.length > 0) {
+    e.preventDefault();
+    items[selectedIndex].click();
+  } else if (e.key === "," && input.value.trim()) {
+    e.preventDefault();
+    selectedTags.push(input.value.trim());
+    input.value = "";
+    updateUI();
+    selectedIndex = -1;
+  } else if (e.key === "Backspace" && input.value === "") {
+    selectedTags.pop();
+    updateUI();
+    selectedIndex = -1;
+  }
+});
+
+      document.addEventListener("click", e => {
+        if (!container.contains(e.target) && !suggestionBox.contains(e.target)) {
+          suggestionBox.style.display = "none";
+        }
+      });
+      container.addEventListener("click", () => {
+        input.focus();
+        showSuggestions();
+      });
+    }
+    function highlightSuggestion(items, index) {
+  items.forEach((item, i) => {
+    item.classList.toggle("highlighted", i === index);
+  });
+}
+
+    initTagInput(
+      document.getElementById("tagInput"),
+      document.getElementById("suggestions"),
+      tagTree
+    );
+    document.getElementById("btn").addEventListener("click", () => {
+      const tags = Array.from(document.querySelectorAll(".tag-chip")).map(tag => tag.textContent);
+      console.log("Selected Tags:", tags);
+      alert(`Selected Tags: ${tags.join(", ")}`);
+    });
+  </script>
+</body>
+</html>

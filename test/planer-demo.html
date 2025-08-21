@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dynamic Goal Planner</title>
+  <style>
+    :root {
+      --bg: #f8f9fb;
+      --card-bg: #ffffff;
+      --text: #222;
+      --accent: #6c63ff;
+      --progress-bg: #e0e0e0;
+      --progress-fill: var(--accent);
+      --border: #dcdce4;
+      --checkbox: #3b82f6;
+    }
+
+    .dark-mode {
+      --bg: #1a1c25;
+      --card-bg: #2b2e3a;
+      --text: #f0f1f7;
+      --accent: #8f86ff;
+      --progress-bg: #3a3d4a;
+      --progress-fill: var(--accent);
+      --border: #444654;
+      --checkbox: #60a5fa;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: "Segoe UI", sans-serif;
+      padding: 2rem;
+      color: var(--text);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .goal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.2rem;
+      transition: background 0.3s ease;
+    }
+
+    .goal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .goal-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      margin: 0.8rem 0;
+      height: 8px;
+      width: 100%;
+      background: var(--progress-bg);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--progress-fill);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .subtasks {
+      margin-top: 0.5rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-left: 1rem;
+    }
+
+    .subtask {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .subtask input[type="checkbox"] {
+      accent-color: var(--checkbox);
+      width: 18px;
+      height: 18px;
+    }
+
+    .weight-label {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    .expanded .subtasks {
+      display: flex;
+    }
+
+    .goal-scope {
+      font-size: 0.8rem;
+      opacity: 0.6;
+      margin-bottom: 0.3rem;
+    }
+  </style>
+</head>
+<body class="dark-modea">
+
+  <div id="goalContainer"></div>
+
+  <script>
+    const goalData = [
+      {
+        scope: "weekly",
+        title: "Master DOM Manipulation",
+        value : 20,
+        tasks: [
+          { name: "Create 3 DOM utilities", done: false, value: 20 },
+          { name: "Build tag input feature", done: true, value: 40 },
+          { name: "Practice 5 problems", done: true, value: 40 }
+        ]
+      },
+      {
+        scope: "monthly",
+        title: "Finish IronFocus v2",
+        value : 10,
+        tasks: [
+          { name: "Redesign Timer UI", done: true, value: 30 },
+          { name: "Add Quote Rotation", done: false, value: 20 },
+          { name: "Add Weekly Goal Panel", done: false, value: 50 }
+        ]
+      }
+    ];
+
+    const container = document.getElementById("goalContainer");
+      let totalValue = 0;
+      let doneValue = 0;
+      const overView = document.createElement("div");
+      overView.className = "goal-card";
+      overView.innerHTML = `  
+        <div class="goal-header" >
+          <span class="goal-title">Overview</span>
+          <span class="goal-progress-text">80%</span>
+        </div>
+      <div class="progress-bar">
+          <div class="progress-fill"></div>
+          </div>   `;
+      container.appendChild(overView);
+    goalData.forEach(goal => {
+      
+      const card = document.createElement("div");
+      card.className = "goal-card";
+
+      const total = goal.tasks.reduce((sum, t) => sum + t.value, 0);
+      totalValue += goal.value;
+      const done = goal.tasks.reduce((sum, t) => t.done ? sum + t.value : sum, 0);
+      
+      const percent = total ? Math.round((done / total) * 100) : 0;
+      doneValue += (percent / 100) * goal.value; 
+      card.innerHTML = `
+        <div class="goal-header" >
+          <span class="goal-title">${goal.title}</span>
+          <span class="goal-progress-text">${percent}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${percent}%"></div>
+        </div>
+        <div class="subtasks">
+          ${goal.tasks.map((task, i) => `
+            <label class="subtask">
+              <input type="checkbox" data-value="${task.value}" ${task.done ? "checked" : ""} onchange="updateProgress(this)">
+              ${task.name} <span class="weight-label">(${task.value})</span>
+            </label>
+          `).join("")}
+        </div>
+      `;
+      card.onclick = function(){
+        this.classList.toggle('expanded')
+      }
+      container.appendChild(card);
+    });
+
+    const percent = totalValue ? Math.round((doneValue / totalValue) * 100)  : 0;
+    overView.querySelector('.progress-fill').style.width = `${percent}%`;
+    overView.querySelector('.goal-progress-text').textContent = `${percent}%`;
+    function updateProgress(cb) {
+      const card = cb.closest(".goal-card");
+      const checkboxes = card.querySelectorAll('input[type="checkbox"]');
+      let total = 0, current = 0;
+
+      checkboxes.forEach(c => {
+        const val = parseFloat(c.dataset.value);
+        total += val;
+        if (c.checked) current += val;
+      });
+
+      const percent = total ? Math.round((current / total) * 100) : 0;
+      card.querySelector(".progress-fill").style.width = `${percent}%`;
+      card.querySelector(".goal-progress-text").textContent = `${percent}%`;
+    }
+  </script>
+</body>
+</html>
