@@ -93,7 +93,7 @@ function createWindow(){
     height: 133,
     frame: false,
     titleBarStyle: 'hidden',
-    opacity: 1,
+    opacity: 0.9,
     skipTaskbar: true,
     alwaysOnTop: true,
     resizable: false,
@@ -101,6 +101,7 @@ function createWindow(){
     icon : 'assets/IronFocus.ico',
     focusable: true,
     transparent: true,
+     backgroundColor: '#a42121ff',
     //  maximizable: true,
     // minimizable : false,
     webPreferences: {

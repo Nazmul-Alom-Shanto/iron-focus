@@ -218,6 +218,7 @@ switchSection('task-start');
 
 
 taskSaveForm.addEventListener('submit', (e) => {
+  console.log('task save form submitted');
   e.preventDefault();
   if(justSaved) return;
   justSaved = true;
@@ -235,13 +236,18 @@ taskSaveForm.addEventListener('submit', (e) => {
   tasks[currTasks].description = description;
   tasks[currTasks].timestamp = new Date().toISOString();
   tasks[currTasks].extraAlocatedTime -= Math.round(tasks[currTasks].secondsLeft / 60);
-  if(tasks[currTasks].fromToDo) {
+  if(tasks[currTasks].fromToDo || tasks[currTasks].fromToDo === 'true') {
     console.log('this task is from todo');
     const task =  taskListToday?.find(task => task?.id === tasks[currTasks]?.id);
     if(task) {
       task.done = true;
       task.title = title;
       task.tags = tags;
+      task.success = success;
+      task.description = description;
+      task.timestamp = new Date().toISOString();
+      taskListToday = taskListToday.filter(task => task.id !== tasks[currTasks].id);
+      taskListToday.push(task);
       updateTaskList(taskListToday, 'todayTaskList');
     } else {
       l('task is ', task);
