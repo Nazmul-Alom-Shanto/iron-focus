@@ -235,11 +235,15 @@ body.dark-mode {
 
 #gear-icon {
   right: 10px;
+  -webkit-app-region: no-drag;
+  z-index: 100;
+  position: fixed;
+
 }
 .drag {
   left: 10px;
-  -webkit-app-region: drag;
   /* padding: 10%; */
+  visibility: hidden;
 }
 #gear-icon.show  {
   display: block;
@@ -486,6 +490,7 @@ body.dark-mode {
       /*user-select: none;*/
       background-repeat: no-repeat;
       border-radius: 7px;
+
       
 
     }
@@ -501,6 +506,8 @@ body.dark-mode {
       text-overflow: ellipsis;
       white-space: nowrap;
       position: relative;
+      -webkit-app-region: drag;
+
     }
 
    .task-show .title::before {
@@ -524,9 +531,13 @@ body.dark-mode {
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 230px;
+      -webkit-app-region: drag;
     }
+    
 
    .task-show .countdown {
+      -webkit-app-region: no-drag;
+
       font-size: 2.8rem;
       font-weight: bolder;
       color: var(--accent2);
