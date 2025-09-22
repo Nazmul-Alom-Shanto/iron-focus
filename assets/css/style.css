@@ -190,7 +190,7 @@ html {
 }
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      /* -webkit-app-region: drag; */
+      -webkit-app-region: drag;
       background: transparent;
 }
  body {

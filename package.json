@@ -1,7 +1,6 @@
 {
   "name": "iron-focus",
   "version": "2.0.0",
-
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -12,15 +11,23 @@
     "productName": "Iron Focus",
     "win": {
       "target": [
-    {
-      "target": "nsis",
-      "arch": [
-        "x64"
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
       ]
-    }
-  ],
-      "icon": "assets/IronFocus.ico"
-     
+      
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Utility",
+      "executableName": "iron-focus",
+      "maintainer": "Nazmul Alom Shanto <you@example.com>",
+      "desktop": {
+        "Name": "Iron Focus",
+        "Comment": "A productivity timer app",
+        "GenericName": "Focus App"
+      }
     },
     "nsis": {
       "oneClick": false,
@@ -38,20 +45,19 @@
     ]
   },
   "keywords": [
-  "electron",
-  "productivity",
-  "task-manager",
-  "time-tracker",
-  "focus",
-  "minimal",
-  "offline",
-  "habit-tracker",
-  "pomodoro",
-  "self-improvement",
-  "desktop-app",
-  "ironfocus"
-]
-,
+    "electron",
+    "productivity",
+    "task-manager",
+    "time-tracker",
+    "focus",
+    "minimal",
+    "offline",
+    "habit-tracker",
+    "pomodoro",
+    "self-improvement",
+    "desktop-app",
+    "ironfocus"
+  ],
   "author": "Nazmul Alom Shanto",
   "license": "MIT",
   "description": "Iron Focus is a minimalist always-on-top productivity tool to help users stay committed to single tasks through a focused session workflow.",

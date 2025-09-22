@@ -202,9 +202,9 @@ function showWarningMessage(message, bg = '#f44336', timeInSec = 3) {
 }
   function fullScreen(f){
       if(f){
-          ipcRenderer.send('fullScreen');
+          ipcRenderer.invoke('fullScreen');
       } else {
-          ipcRenderer.send('exitFullScreen')
+          ipcRenderer.invoke('exitFullScreen')
       }
   }
   function startTask(title, time, tags, fromToDo = false, id = null) {
