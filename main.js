@@ -67,7 +67,7 @@ function checkMainWindow(){
 function smallSize(){
   l('smallSize() just triggered');
   if(isSmall) return;
-  // mainWindow.setResizable(true);
+  mainWindow.setResizable(true);
   mainWindow.focus(); // ensure window has focus
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   mainWindow.setBounds({
@@ -78,15 +78,16 @@ function smallSize(){
   });
   isSmall = true;
   // mainWindow.setResizable(false);
+  mainWindow.setFullScreen(false);
 }
 function bigSize(){
   if(!mainWindow  || mainWindow.isFullScreen()) return;
   l('bigSize() just triggered');
-  // mainWindow.setResizable(true);
+  mainWindow.setResizable(true);
   mainWindow.focus(); // ensure window has focus
 
   mainWindow.setFullScreen(true);
-  // mainWindow.setResizable(false);
+  mainWindow.setResizable(false);
   isSmall = false;
 
 }
@@ -98,8 +99,8 @@ function createWindow(){
     titleBarStyle: 'hidden',
     opacity: 0.6,
     skipTaskbar: true,
-    // alwaysOnTop: true,
-    // resizable: false,
+    alwaysOnTop: true,
+    resizable: false,
     // closable: false,
     icon : 'assets/IronFocus.ico',
     focusable: true,
@@ -199,33 +200,33 @@ app.whenReady().then(() => {
     bigSize();
   });
   
-  // mainWindow.on('minimize', (e) => {
-  //   l('minimize event triggered');
-  //   e.preventDefault();
-  //   mainWindow.hide();
-  //   setTimeout(()=> {
-  //     checkMainWindow();
-  //   }, 3000);
-  //   // mainWindow.setAlwaysOnTop(true);
-  // });
-  // mainWindow.on('close', (e)=> {
-  //   l('close event triggered');
-  //   e.preventDefault();
-  //   mainWindow.hide();
-  //   setTimeout(()=> {
-  //     checkMainWindow();
-  //   }, 1000);
-  // });
+  mainWindow.on('minimize', (e) => {
+    l('minimize event triggered');
+    e.preventDefault();
+    mainWindow.hide();
+    setTimeout(()=> {
+      checkMainWindow();
+    }, 3000);
+    // mainWindow.setAlwaysOnTop(true);
+  });
+  mainWindow.on('close', (e)=> {
+    l('close event triggered');
+    e.preventDefault();
+    mainWindow.hide();
+    setTimeout(()=> {
+      checkMainWindow();
+    }, 1000);
+  });
   mainWindow.setAlwaysOnTop(true, 'screen-saver'); // or 'modal-panel'
   // mainWindow.setWindowButtonVisibility(false);
-  // mainWindow.on('blur', () => {
-  //   l('blur event triggered');
-  //   setTimeout(() => {
-  //     if (!mainWindow.isFocused()) {
-  //       if(!mainWindow.isAlwaysOnTop()) mainWindow.setAlwaysOnTop(true, 'screen-saver');
-  //     }
-  //   }, 2000);
-  // });
+  mainWindow.on('blur', () => {
+    l('blur event triggered');
+    setTimeout(() => {
+      if (!mainWindow.isFocused()) {
+        if(!mainWindow.isAlwaysOnTop()) mainWindow.setAlwaysOnTop(true, 'screen-saver');
+      }
+    }, 2000);
+  });
 if (!app.isPackaged) {
   app.setName('Iron-Focus-v2-test');
 }
